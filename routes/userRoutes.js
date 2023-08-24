@@ -31,7 +31,7 @@ userRouter.get('/login',auth.isLogout,userController.loginLoad)
 userRouter.get('/signup',auth.isLogout,userController.loadSignup)
 userRouter.get('/otp', userController.loadOTP);
 userRouter.get('/resendotp', userController.resendOTP);
-userRouter.get('/resendotplogin', userController.rresendOTP);
+userRouter.get('/resendotplogin', userController.resendOTP);
 
 
 userRouter.get('/home', userController.loadHome);
