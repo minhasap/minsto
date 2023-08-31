@@ -96,119 +96,135 @@ const loadSignup = async (req, res) => {
     }
 };
 const insertUser = async (req, res) => {
-    try {
-        let userData = {
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
-            userName: req.body.userName,
-            email: req.body.email,
-            phone: req.body.phone,
-            password: req.body.password,
-        };
+   try {
+       let userData = {
+           firstName: req.body.firstName,
+           lastName: req.body.lastName,
+           userName: req.body.userName,
+           email: req.body.email,
+           phone: req.body.phone,
+           password: req.body.password,
+       };
 
-        req.session.userData = userData;
+       req.session.userData = userData;
 
-        if (!req.body.firstName || !req.body.lastName || !req.body.userName || !req.body.email || !req.body.phone || !req.body.password || !req.body.re_password) {
-            return res.render('signup', { messageFailed: " Please fill out all the fields ", userData: userData });
-        }
+       if (!req.body.firstName || !req.body.lastName || !req.body.userName || !req.body.email || !req.body.phone || !req.body.password || !req.body.re_password) {
+           return res.render('signup', { messageFailed: " Please fill out all the fields ", userData: userData });
+       }
 
-        const isNewName = await User.isExistingUserName(req.body.userName);
-        if (!isNewName) {
-            return res.render('signup', { 
-                messageFailed: "Existing Username",
-                userData: userData
-            });
-        }
+       // Validate strong password
+       if (!isStrongPassword(req.body.password)) {
+           return res.render('signup', { 
+               messageFailed: "Password should be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one digit, and one special character.",
+               userData: userData
+           });
+       }
 
-        const isNewPhone = await User.isExistingPhone(req.body.phone);
-        if (!isNewPhone) {
-            return res.render('signup', {
-                messageFailed: "Existing phone number",
-                userData: userData
-            });l
-        }
+       const isNewName = await User.isExistingUserName(req.body.userName);
+       if (!isNewName) {
+           return res.render('signup', { 
+               messageFailed: "Existing Username",
+               userData: userData
+           });
+       }
 
-        const isNewEmail = await User.isExistingEmail(req.body.email);
-        if (!isNewEmail) {
-            return res.render('signup', {
-                messageFailed: 'Existing Email address. Please try to Log - In',
-                userData: userData
-            });
-        }
+       const isNewPhone = await User.isExistingPhone(req.body.phone);
+       if (!isNewPhone) {
+           return res.render('signup', {
+               messageFailed: "Existing phone number",
+               userData: userData
+           });
+       }
 
-        req.session.otp = OTP;
-        sendOTP(userData.userName, userData.email, userData.phone, OTP);
-        res.redirect('/otp');
-    } catch (error) {
-        console.log('in insertUser method', error.message);
-    }
+       const isNewEmail = await User.isExistingEmail(req.body.email);
+       if (!isNewEmail) {
+           return res.render('signup', {
+               messageFailed: 'Existing Email address. Please try to Log - In',
+               userData: userData
+           });
+       }
+
+       req.session.otp = OTP;
+       sendOTP(userData.userName, userData.email, userData.phone, OTP);
+       res.redirect('/otp');
+   } catch (error) {
+       console.log('in insertUser method', error.message);
+   }
 }
+
+function isStrongPassword(password) {
+   // Define your criteria for strong passwords here
+   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+   return passwordRegex.test(password);
+}
+
 
 
  
 const loadOTP = async (req, res) => {
 
     try {
-
-        res.render('otp', { email: req.session.email });
-
+ 
+       res.render('otp', { email: req.session.email });
+       console.log(OTP);
+ 
     } catch (error) {
-        console.log('loadOTP method', error.message);
+       console.log('loadOTP method', error.message);
     }
-};
-
+ };
+ 
 const resendOTP = async (req, res) => {
 
     try {
-console.log("otppppp");
-        sendOTP(req.session.userData.userName, req.session.userData.email, OTP);
-        console.log(userName);
-
+ 
+       sendOTP(req.session.userData.userName, req.session.userData.email, OTP);
+ 
     } catch (error) {
-        console.log('resendOtp method', error.message);
+       console.log('resendOtp method', error.message);
     }
-
-};
+ 
+ };
 
 const verifyOTP = async (req, res) => {
 
     try {
-
-        const { val1, val2, val3, val4, val5, val6 } = req.body;
-
-        const formOtp = Number(val1 + val2 + val3 + val4 + val5 + val6);
-
-        if (formOtp == OTP) {
-            const { firstName, lastName, userName, email, phone, password } = req.session.userData;
-
-            const secPassword = await securePassword(password);
-            const user = new User({
-
-                firstName: firstName,
-                lastName: lastName,
-                phone: phone,
-                userName: userName,
-                email: email,
-                password: secPassword,
-
-            });
-
-            const userData = await user.save();
-
-            if (userData) {
-                res.render('login', { message: 'Registration Success' });
-            } else {
-                res.render('signup', { messageFailed: 'Registarion Failed' })
-            }
-        } else {
-            res.render('signup', { messageFailed: 'Incorrect OTP' })
-        }
-
+ 
+       const { val1, val2, val3, val4, val5, val6 } = req.body;
+ 
+       const formOtp = Number(val1 + val2 + val3 + val4 + val5 + val6);
+ 
+       if (formOtp == OTP) {
+          const { firstName, lastName, userName, email, phone, password } = req.session.userData;
+ 
+          const secPassword = await securePassword(password);
+          const user = new User({
+ 
+             firstName: firstName,
+             lastName: lastName,
+             phone: phone,
+             userName: userName,
+             email: email,
+             password: secPassword,
+ 
+          });
+ 
+          const userData = await user.save();
+ 
+          if (userData) {
+             res.render('login', { message: 'Registration Success' });
+          } else {
+             res.render('signup', { messageFailed: 'Registarion Failed' })
+          }
+       } else {
+          res.render('signup', { messageFailed: 'Incorrect OTP' })
+       }
+ 
     } catch (error) {
-        console.log('in VerifyOTP:- ', error.message);
+       console.log('in VerifyOTP:- ', error.message);
     }
-
-};
+ 
+ };
+ 
 
 // loginuser 
 
@@ -230,42 +246,40 @@ const loginLoad = async (req, res) => {
 
 }
 
-
 const verifyLogin = async (req, res) => {
 
     try {
-        const email = req.body.email;
-        const password = req.body.password;
-        console.log(password,email);
-
-        if (!email || !password) return res.render('login', { message: " Please fill all the fields " });
-
-        const userData = await User.findOne({ email: email });
-
-        if (userData) {
-
-            // if (userData.is_blocked == 1) return res.render('login', { message: " Your Acoount Is currently Blocked " });
-
-            const isMatchingPassword = await bcrypt.compare(password, userData.password);
-
-            if (isMatchingPassword) {
-
-                 req.session.otp = OTP;
-        sendOTP(userData.userName, userData.email, userData.phone, OTP);
-        res.redirect('/otp');
-
-            } else {
-                res.render('login', { message: 'Email or password is incorrect' });
-            }
-        } else {
-            res.render('login', { message: 'Email or password is incorrect' });
-        }
+       const email = req.body.email;
+       const password = req.body.password;
+ 
+       if (!email || !password) return res.render('login', { message: " Please fill out all the fields " });
+ 
+       const userData = await User.findOne({ email: email });
+ 
+       if (userData) {
+ 
+          if (userData.is_blocked == 1) return res.render('login', { message: " Your Acoount Is currently Blocked " });
+ 
+          const isMatchingPassword = await bcrypt.compare(password, userData.password);
+ 
+          if (isMatchingPassword) {
+ 
+             req.session.user_id = userData._id;
+             req.session.userData = userData;
+             res.redirect('/home');
+ 
+          } else {
+             res.render('login', { message: 'Email or password is incorrect' });
+          }
+       } else {
+          res.render('login', { message: 'Email or password is incorrect' });
+       }
     } catch (error) {
-        console.log(error);
-        res.render('login', { message: 'An error occurred. Please try again.' });
+       console.log(error);
+       res.render('login', { message: 'An error occurred. Please try again.' });
     }
-};
-
+ };
+ 
 // Home 
 const loadHome = async (req, res) => {
     try {
@@ -326,29 +340,157 @@ const blockUser =async (req,res)=>{
 
   const loadShop = async (req, res) => {
     try {
-        const category = await Category.find();
-
-        const data = await Product.find();
-        if(req.session.userData && req.session.userData._id){
-            const cart = await Cart.findOne({user: req.session.userData._id});
-            if(cart?.products){
-                req.session.length = cart.products.length;
-            }
-        }
-
-        res.render('shop', {
-            req: req,
-            products: data,
-
-        
-        });
-        
+       const category = await Category.find();
+       const search = req.query.searchKey ? req.query.searchKey : '';
+ 
+       const count = 9;
+       const pageNo = parseInt(req.query.page) || 0;
+       const skip = count * pageNo;
+ 
+       if (req.session.userData && req.session.userData._id) {
+          const cart = await Cart.findOne({ user: req.session.userData._id });
+          if (cart?.products) {
+             req.session.length = cart.products.length;
+          }
+       }
+ 
+       const { brand, price, categories, sort } = req.query;
+ 
+       const cat = [];
+ 
+       if (Array.isArray(categories) && categories.length > 1) {
+          const promises = categories.map(async (c) => {
+             let n = await Category.findById(c);
+             cat.push(n.name);
+          });
+ 
+          await Promise.all(promises)
+             .catch((error) => {
+                console.error("An error occurred:", error);
+             });
+       } else if (Array.isArray(categories) && categories.length === 1) {
+          let n = await Category.findById(categories[0]);
+          cat = n.name;
+       }
+ 
+ 
+ 
+       const filter = {
+          is_hidden: { $ne: true }
+       };
+ 
+       if (brand) {
+          filter.brand = { $in: Array.isArray(brand) ? brand : [brand] };
+       }
+ 
+       if (price) {
+          const [minPrice, maxPrice] = price.split('-');
+          filter.price = { $gte: Number(minPrice), $lte: Number(maxPrice) };
+       }
+ 
+       if (categories) {
+          filter.category = { $in: Array.isArray(categories) ? categories : [categories] };
+       }
+ 
+       let sortOption = {};
+       if (sort == 1) {
+          sortOption.price = -1;
+       } else if (sort == 2) {
+          sortOption.price = 1;
+       }
+ 
+       let data;
+       let dataCount;
+ 
+       if (search) {
+          data = await Product.find({
+             '$or': [
+                { productName: { $regex: new RegExp(search, 'i') } },
+                { brand: { $regex: new RegExp(search, 'i') } },
+             ]
+          }).skip(skip).limit(count);
+ 
+          dataCount = await Product.countDocuments({
+             '$or': [
+                { productName: { $regex: new RegExp(search, 'i') } },
+                { brand: { $regex: new RegExp(search, 'i') } },
+             ]
+          });
+       } else {
+          data = await Product.find(filter).sort(sortOption).skip(skip).limit(count);
+          dataCount = await Product.countDocuments(filter);
+       }
+ 
+       const totalPage = Math.ceil(dataCount / count);
+ 
+       const filtered = brand || price || categories || sort;
+ 
+       // Define the generatePageLink function here
+       function generatePageLink(page, currentFilters) {
+          const queryParams = [];
+      
+          if (search !== '') {
+              queryParams.push('searchKey=' + encodeURIComponent(search));
+          }
+      
+          if (brand && Array.isArray(brand)) {
+              queryParams.push(...brand.map(b => 'brand=' + encodeURIComponent(b)));
+          }
+      
+          if (price) {
+              queryParams.push('price=' + encodeURIComponent(price));
+          }
+      
+          if (categories) {
+              if (Array.isArray(categories)) {
+                  queryParams.push(...categories.map(c => 'categories=' + encodeURIComponent(c)));
+              } else {
+                  queryParams.push('categories=' + encodeURIComponent(categories));
+              }
+          }
+      
+          // Include other filter criteria in queryParams
+      
+          if (currentFilters) {
+              Object.keys(currentFilters).forEach(filterKey => {
+                  if (currentFilters[filterKey]) {
+                      if (Array.isArray(currentFilters[filterKey])) {
+                          queryParams.push(...currentFilters[filterKey].map(value => filterKey + '=' + encodeURIComponent(value)));
+                      } else {
+                          queryParams.push(filterKey + '=' + encodeURIComponent(currentFilters[filterKey]));
+                      }
+                  }
+              });
+          }
+      
+          // Append the page query parameter
+          queryParams.push('page=' + page);
+      
+          return '/shop?' + queryParams.join('&');
+      }
+      
+       res.render('shop', {
+          req,
+          product: data,
+          category,
+          filtered: filtered,
+          totalPage,
+          pageNo,
+          brand,
+          price,
+          categories: cat,
+          cat: categories,
+          search,
+          sort,
+          generatePageLink: generatePageLink,
+       });
+ 
     } catch (error) {
-        console.log("shop error");
+       console.log('loadShop Method: ', error.message);
     }
-};
-
-
+ };
+ 
+ 
 const productDetail = async (req, res) => {
     try {
      const id = req.query.id;
@@ -381,8 +523,8 @@ const detaileprofile = async (req, res) => {
        const cart = await Cart.findOne({ user: req.session.userData._id });
  
        const user = await User.findOne({ email: userData.email });
-       length = cart.products.length;
- 
+       length = cart.products.length;  
+       
        res.render('profile', {
           user: user,
           req: req,
@@ -395,7 +537,7 @@ const detaileprofile = async (req, res) => {
     }
  
  };
-
+  
  
 const loadAddressList = async (req, res) => {
 
@@ -405,9 +547,9 @@ const loadAddressList = async (req, res) => {
  
        const user = await User.findOne({ email: userData.email });
        const address = user.address;
- 
+     
        if (address.length) {
- 
+  
           res.render('addressList', {
              user,
              address,
@@ -584,6 +726,56 @@ const deleteAddress = async (req, res) => {
 };
 
 
+const search = async (req, res) => {
+
+    try {
+ 
+       const category = await Category.find();
+       const searchKey = req.body.searchKey
+ 
+       if (searchKey) {
+ 
+          const product = await Product.find({
+             "$or": [
+                { productName: { $regex: new RegExp(searchKey, 'i') } },
+                { brand: { $regex: new RegExp(searchKey, 'i') } }
+             ]
+          });
+ 
+          res.render('shop',
+             {
+                req,
+                length,
+                category,
+                filtered: false,
+                product,
+ 
+             }
+          );
+ 
+       } else {
+ 
+          const product = await Product.find();
+ 
+          res.render('shop',
+             {
+                req,
+                length,
+                category,
+                filtered: false,
+                product,
+ 
+             }
+          );
+ 
+       }
+ 
+ 
+    } catch (error) {
+       console.log('search Method :-  ', error.message);
+    }
+ 
+ }
 
 module.exports = {
 
@@ -608,39 +800,15 @@ module.exports = {
     loadEditAddress,
     editAddress,
 
-     deleteAddress 
+     deleteAddress ,
+     search, 
+
 
 };
 
 
 
 
-
-// <div class="row row-pb-md">
-
-    
-        
-        
-
-// <div class="col-lg-3 mb-4 text-center">
-    
-//     <div class="product-entry border">
-        
-        
-//         <div class="desc">
-            
-
-
-
-//             <a href="/productdetail?id=<%= products._id%>" class="prod-img">
-//                 <img src="/productImages/<%= products.image[0] %>" class="img-fluid" alt="Free html5 bootstrap 4 template " onclick="location.href='/productdetail?id=<%=products._id%>'">
-//             </a>
-//             <h2><a href="productdetail"><%= products.productname %></a></h2>
-//             <span class="price">Price <%= products.price %>/-</span>
-            
-//         </div> 
-//     </div>
-// </div>
 
                     
 

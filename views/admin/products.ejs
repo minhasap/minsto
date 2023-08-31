@@ -127,9 +127,9 @@
                   <th scope="col">Name</th>
                   <th scope="col">Brand</th>
                   <th scope="col">Price</th>
-                  <th scope="col">Description</th>
+               
                   <th scope="col">Quantity</th>
-                  <th scope="col">Category</th>
+                  
                   <th scope="col">Image</th>
                   <th scope="col">Edit/Delete</th>
                 </tr>
@@ -143,9 +143,9 @@
                       <td><%= product.productname %></td>
                       <td><%= product.brand %></td>
                       <td><%= product.price %></td>
-                      <td><%= product.description %></td>
+                   
                       <td><%= product.quantity %></td>
-                      <td><%= product.category %></td>
+                      
                       <td><img style="height: 120px;" src="/productImages/<%= product.image[0] %>" width="100px" alt="<%= product.image %>"></td>
                       <td>
                         <a href="/admin/editproducts?id=<%= product._id %>" class="edit" style="color: green;"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>

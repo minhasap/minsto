@@ -243,41 +243,14 @@
                                  <% } %>
                      </div>
 
-                     <button type="button" class="btn btn-primary btn-outline-primary " data-toggle="modal"
-                        data-target="#myModal">
-                        Add Address
-                     </button>
+                     <p class="mb-0 text-black font-weight-bold"><a class="text-primary mr-3"
+                        href="/addAddress">
+                        <span class="material-symbols-outlined">post_add</span>Add Address</a></p>
                   </div>
 
                </div>
 
-               <div class="row form-group">
-                  <div class="col-sm-9 col-md-5">
-                     <input type="text" id="code" class="form-control input-number " style="border-radius: 20px; "
-                        placeholder="Your Coupon Number...">
-                  </div>
-               </div>
-               <div class="row form-group">
-                  <table>
-
-                     <td>
-                        <div class="col-sm-3">
-                           <input type="button" onclick="applyCoupon($('#code').val())" value="Apply Coupon"
-                              style="border-radius: 20px; width: 200px; margin: 0%;"
-                              class=" btn btn-primary btn-outline-primary ">
-                        </div>
-                     </td>
-
-                     <td>
-                        <div class="col-sm-3">
-                           <input type="button" onclick="location.href='/checkOut'" value="Remove Coupon"
-                              style="border-radius: 20px; width: 150px;" class=" btn btn-primary btn-outline-primary ">
-                        </div>
-                     </td>
-
-                  </table>
-
-               </div>
+               
 
                <div class="container">
                   <div class="row" style="background-color: whitesmoke;">
@@ -327,13 +300,13 @@
                               </div>
                            </div>
 
-                           <% if(wallet !==0){%>
+                           <% if(wallet !==10){%>
                               <div class="form-group">
                                  <div class="col-md-12">
                                     <div class="radio" id="walletRadio">
                                        <label>
                                           <input onclick="checkWallet()" type="radio" name="payment" value="cod">
-                                          <span>wallet with COD: ₹</span>
+                                          <span>Cash on delivery</span>
                                           <span id="wallet">
                                              <%= wallet %>
                                           </span>
@@ -363,19 +336,14 @@
                                           <div class="form-group">
                                              <div class="col-md-12">
                                                 <div class="radio">
-                                                   <label><input type="radio" value="razorpay" name="payment"> RazorPay
+                                                   <label><input type="radio" value="razorpay" name="payment">UPI
                                                    </label>
                                                 </div>
                                              </div>
                                           </div>
                                           <div class="form-group">
                                              <div class="col-md-12">
-                                                <div class="checkbox">
-                                                   <label><input required type="checkbox"> I have read and accept the
-                                                      terms
-                                                      and
-                                                      conditions</label>
-                                                </div>
+                                               
                                              </div>
                                           </div>
                         </div>
@@ -548,7 +516,7 @@
             const code = codeElement ? codeElement.innerHTML : '';
             const selectedAddressId = $("input[name=address]:checked").siblings("label").find("input[name=addressId]").val();
 
-            console.log(selectedAddressId);
+            console.log(payment);
 
 
             $.ajax({

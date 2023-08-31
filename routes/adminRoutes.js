@@ -42,6 +42,7 @@ adminRouter.get('/addCategory',categoryController.loadAddCategory)
 adminRouter.post('/addCategory',categoryController.addCategory)
 adminRouter.get('/editCategory/:id',categoryController.editCategory)
 adminRouter.post('/editCategory',categoryController.addEditCategory)
+adminRouter.get('/orders',OrderController.getOrder)
 
 
 

@@ -5,6 +5,7 @@ const Order = require('../models/orderModel');
 const fs = require('fs');
 
 const {default:mongoose}= require('mongoose');
+const { log } = require('util');
 
 
 
@@ -172,18 +173,20 @@ const placeOrder = async (req,res) => {
    try {
       if (req.session.userData && req.session.userData._id) {
          const userId = req.session.userData._id;
-         const { total, address,  addressId } = req.body;
+         const { total, address,  addressId, payment } = req.body;
 
          const user = await User.findById(userId);
+         console.log(payment);
 
          if (address === null) return res.json({ codFailed: true });
 
          const cartData = await Cart.findOne({ user: user._id });
          const cartProducts = cartData.products;
+         const status = payment == 'cod' ? 'Placed' : 'Pending';
       
 
          let wall;
-         let cod;
+         let cod; 
          if (user.wallet < total) {
             wall = 10;
             cod = user.wallet - total - 10
@@ -197,11 +200,11 @@ const placeOrder = async (req,res) => {
             deliveryAddress: address,
             addressId,
             user: userId,
-            // paymentMethod: payment,
+            paymentMethode: payment,
             products: cartProducts,
             totalPrice: total,
             orderDate: new Date(),
-            // status: status,
+            status: status,
             wallet: wall,
             discount: 0,
             couponCode: '',
@@ -413,6 +416,16 @@ const loadOrderList = async (req, res) => {
 };
 
 
+const getOrder = async (req,res)=>{
+   try {
+      const orderData = await Order.find();
+      res.render("orders",{data:orderData});
+   } catch (error) {
+      console.log(error.message);
+   }
+}
+
+
 module.exports ={
     loadCheckout,
     placeOrder,
@@ -421,7 +434,7 @@ module.exports ={
     addAddress,
     verifyPayment,
     loadOrderList,
-    
+    getOrder,
 
 }
 

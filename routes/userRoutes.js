@@ -53,6 +53,9 @@ userRouter.get('/editAddress',auth.isLogin,userController.loadEditAddress);
 userRouter.get('/deleteAddress',auth.isLogin,userController.deleteAddress);
 userRouter.get('/orderPlaced',auth.isLogin,orderController.loadOrderPLaced)
 userRouter.post('/placeOrder',auth.isLogin,orderController.placeOrder)
+userRouter.get('/viewOrders',auth.isLogin,orderController.loadOrderList)
+
+
 
 userRouter.post('/addAddress',userController.addAddress);
 userRouter.post('/addCheckoutAddress', orderController.addAddress);

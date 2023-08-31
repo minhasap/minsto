@@ -1,20 +1,14 @@
 <!DOCTYPE HTML>
 <html>
+	<head>
+	<title>Footwear - Free Bootstrap 4 Template by Colorlib</title>
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-<head>
-	<title>WalkWise</title>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
+   <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+   rel="stylesheet">
+   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
 	
-	<link id="page_favicon" href="/logo.svg" rel="icon" type="image/x-icon">
-
-	<link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/css?family=Rokkitt:100,300,400,700" rel="stylesheet">
-
-	<link rel="stylesheet"
-		href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-
 	<!-- Animate.css -->
 	<link rel="stylesheet" href="/user/css/animate.css">
 	<!-- Icomoon Icon Fonts-->
@@ -33,7 +27,7 @@
 	<!-- Owl Carousel -->
 	<link rel="stylesheet" href="/user/css/owl.carousel.min.css">
 	<link rel="stylesheet" href="/user/css/owl.theme.default.min.css">
-
+	
 	<!-- Date Picker -->
 	<link rel="stylesheet" href="/user/css/bootstrap-datepicker.css">
 	<!-- Flaticons  -->
@@ -42,10 +36,12 @@
 	<!-- Theme style  -->
 	<link rel="stylesheet" href="/user/css/style.css">
 
-</head>
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
 
-<body>
-
+	</head>
+	<body>
+		
 	<div class="colorlib-loader"></div>
 
 	<div id="page">
@@ -54,53 +50,86 @@
 				<div class="container">
 					<div class="row">
 						<div class="col-sm-7 col-md-9">
-							<div id="colorlib-logo"><a  href="#"> <img style="width: 40px;" src="/logo.svg" alt=""> WalkWise</a></div>
+							<div id="colorlib-logo"><a href="index.html">MinSto.</a></div>
 						</div>
 						<div class="col-sm-5 col-md-3">
-							<form action="#" class="search-wrap">
-								<div class="form-group">
-									<input type="search" class="form-control search" placeholder="Search">
-									<button class="btn btn-primary submit-search text-center" type="submit"><i
-											class="icon-search"></i></button>
-								</div>
-							</form>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-sm-12 text-left menu-1">
-							<ul>
-								<li><a href="/home">Home</a></li>
-								<li >
-									<a href="/shop">Shop</a>
-								</li>
-								<li><a href="/about">About</a></li>
-								<li><a href="/contact">Contact</a></li>
-								<li class="cart active"><a href="/cart"><i class="icon-shopping-cart"></i> Cart 
-									[<%=length %>]</a>
-								<li class="has-dropdown cart">
-									<a href="#"><span class="material-symbols-outlined">account_circle</span></a>
-									<ul class="dropdown">
+			            <form action="#" class="search-wrap">
+			               <div class="form-group">
+			                  <input type="search" class="form-control search" placeholder="Search">
+			                  <button class="btn btn-primary submit-search text-center" type="submit"><i class="icon-search"></i></button>
+			               </div>
+			            </form>
+			         </div>
+		         </div>
+				 <div class="row">
+					<div class="col-sm-12 text-left menu-1">
+						<ul>
+							<li class="active"><a href="home">Home</a></li>
+							<li><a href="shop">Shop</a></li>
 
+							<li >
+								<a href="#">men</a>
+							</li>
+							<li><a href="#">Women</a></li>
+							<li><a href="#">About</a></li>
+							<li><a href="#">Contact</a></li>
+							<li class="cart">
+								<% if (typeof length !== 'undefined') {%>
+									<a href="/cart"><i class="icon-shopping-cart"></i> Cart </a>
+								<%}else {%>
+									<a href="cart"><i class="icon-shopping-cart"></i> Cart </a>
+								<% } %>
+							</li>
 
-										<% if (typeof req.session.user_id !== 'undefined') {%>
-											<li><a href="/userProfile">Profile</a></li>
-											<li><a href="/viewOrders">Orders</a></li>
-											<li><a href="/logout">logout</a></li>
-										<%} else {%>
-											<li><a href="/login">login</a></li>
+							<li class="has-dropdown cart">
+								
+								<a href="#"><span class="material-symbols-outlined">person</span></a>
+								<ul class="dropdown">
+										
+										
+											<% if (typeof req.session.user_id !== 'undefined') {%>
+												<li><a href="profile">Profile</a></li>
+												<li><a href="/viewOrders">Orders</a></li>
+												<li><a href="/logout">logout</a></li>
+											<%} else {%>
+												<li><a href="login">login</a></li>
 											<% } %>
-
-													<!-- <li><a href="#">Checkout</a></li>
-												<li><a href="#">Order Complete</a></li>
-												<li><a href="#">Wishlist</a></li> -->
+										
+									<!-- <li><a href="#">Checkout</a></li>
+										<li><a href="#">Order Complete</a></li>
+										<li><a href="#">Wishlist</a></li> -->
 									</ul>
 								</li>
-								</li>
-							</ul>
+							</li>
+						</ul>
+					</div>
+				</div>
+				</div>
+			</div>
+			<div class="sale">
+				<div class="container">
+					<div class="row">
+						<div class="col-sm-8 offset-sm-2 text-center">
+							<div class="row">
+								<div class="owl-carousel2">
+									<div class="item">
+										<div class="col">
+											<h3><a href="#">25% off (Almost) Everything! Use Code: Summer Sale</a></h3>
+										</div>
+									</div>
+									<div class="item">
+										<div class="col">
+											<h3><a href="#">Our biggest sale yet 50% off all summer shoes</a></h3>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
+		</nav>
+
 
 			<div class="sale">
 				<div class="container">
