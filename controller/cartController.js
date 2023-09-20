@@ -4,95 +4,95 @@ const User = require('../models/usermodel');
 
 
 
-let length = 0;  
+let length = 0;
+
 const loadCart = async (req, res) => {
-    try {
-       if (req.session.userData._id) {
-          const user = await User.findOne({ _id: req.session.userData });
-          const id = user._id;
-          const cart = await Cart.findOne({ user: id });
- 
-          if (cart) {
-             const cartData = await Cart.findOne({ user: id })
-                .populate("products.product_id")
-                .lean();
- 
-             if (cartData) {
-                if (cartData.products.length > 0) {
-                   length = cartData.products.length;
-                };
-                if (cartData.products.length) {
-                   const total = await Cart.aggregate([
-                      {
-                         $match: { user: id },
-                      },
-                      {
-                         $unwind: "$products",
-                      },
-                      {
-                         $project: {
-                            price: "$products.price",
-                            quantity: "$products.quantity",
-                            image: "$products.image",
-                            total_price: {
-                               $multiply: ["$products.price", "$products.quantity"], // Calculate the total price
-                            },
-                         },
-                      },
-                      {
-                         $group: {
-                            _id: null,
-                            total: {
-                               $sum: "$total_price",
-                            },
-                         },
-                      },
-                   ]).exec();
- 
-                   const Total = total[0].total;
- 
- 
- 
-                   // Set the length value in the request object
-                   req.length = length;
- 
-                   return res.render("cart", {
-                      user: req.session.userData.userName,
-                      data: cartData.products,
-                      userId: id,
-                      total: Total,
-                      req: req,
-                      length: length,
-                   });
-                } else {
-                   return res.render("cart", {
-                      user: req.session.userData.userName,
-                      data2: "hi",
-                      req: req,
-                   });
-                }
-             } else {
-                return res.render("cart", {
-                   user: req.session.userData.userName,
-                   data2: "hi",
-                   req: req,
-                });
-             }
-          } else {
-             return res.render("cart", {
-                user: req.session.userData.userName,
-                data2: "hi",
-                req: req,
-             });
-          }
-       } else {
-          return res.redirect("/");
-       }
-    } catch (error) {
-       console.log("loadCart Method:", error.message);
-    }
- };
- 
+   try {
+      if (req.session.userData._id) {
+         const user = await User.findOne({ _id: req.session.userData });
+         const id = user._id;
+         const cart = await Cart.findOne({ user: id });
+
+         if (cart) {
+            const cartData = await Cart.findOne({ user: id })
+               .populate("products.product_id")
+               .lean();
+
+            if (cartData) {
+               if (cartData.products.length > 0) {
+                  length = cartData.products.length;
+               };
+               if (cartData.products.length) {
+                  const total = await Cart.aggregate([
+                     {
+                        $match: { user: id },
+                     },
+                     {
+                        $unwind: "$products",
+                     },
+                     {
+                        $project: {
+                           price: "$products.price",
+                           quantity: "$products.quantity",
+                           image: "$products.image",
+                           total_price: {
+                              $multiply: ["$products.price", "$products.quantity"], // Calculate the total price
+                           },
+                        },
+                     },
+                     {
+                        $group: {
+                           _id: null,
+                           total: {
+                              $sum: "$total_price",
+                           },
+                        },
+                     },
+                  ]).exec();
+
+                  const Total = total[0].total;
+
+
+
+                  // Set the length value in the request object
+                  req.length = length;
+
+                  return res.render("cart", {
+                     user: req.session.userData.userName,
+                     data: cartData.products,
+                     userId: id,
+                     total: Total,
+                     req: req,
+                     length: length,
+                  });
+               } else {
+                  return res.render("cart", {
+                     user: req.session.userData.userName,
+                     data2: "hi",
+                     req: req,
+                  });
+               }
+            } else {
+               return res.render("cart", {
+                  user: req.session.userData.userName,
+                  data2: "hi",
+                  req: req,
+               });
+            }
+         } else {
+            return res.render("cart", {
+               user: req.session.userData.userName,
+               data2: "hi",
+               req: req,
+            });
+         }
+      } else {
+         return res.redirect("login");
+      }
+   } catch (error) {
+      console.log("loadCart Method:", error.message);
+   }
+};
 const addToCart = async (req, res) => {
     try {
        if (req.session.userData && req.session.userData._id) {
@@ -146,7 +146,7 @@ const addToCart = async (req, res) => {
              });
              await data.save();
           }
-          res.json({ success: true });
+          res.json({ success: true }); 
        } else {
           res.json({ success: false, error: "User not logged in" });
        }

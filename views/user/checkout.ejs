@@ -113,6 +113,7 @@
                                  <li><a href="/userProfile">Profile</a></li>
                                  <li><a href="/viewOrders">Orders</a></li>
                                  <li><a href="/logout">logout</a></li>
+                                 <li><a href="/Wishlist">wishlist</a></li>
                                  <%} else {%>
                                     <li><a href="/login">login</a></li>
                                     <% } %>
@@ -250,7 +251,31 @@
 
                </div>
 
-               
+               <div class="row form-group">
+                  <div class="col-sm-9 col-md-5">
+                     <input type="text" id="code" class="form-control input-number "
+                        style="border-radius: 20px; " placeholder="Your Coupon Number...">
+                  </div>
+               </div>
+               <div class="row form-group">
+                  <table>
+                     
+                     <td><div class="col-sm-3">
+                        <input type="button" onclick="applyCoupon($('#code').val())" value="Apply Coupon"
+                           style="border-radius: 20px; width: 200px; margin: 0%;"
+                           class=" btn btn-primary btn-outline-primary ">
+                     </div></td>
+
+                     <td>
+                        <div class="col-sm-3">
+                           <input type="button" onclick="location.href='/checkOut'" value="Remove Coupon"
+                              style="border-radius: 20px; width: 150px;" class=" btn btn-primary btn-outline-primary ">
+                        </div>
+                     </td>
+
+                  </table>
+                  
+               </div>
 
                <div class="container">
                   <div class="row" style="background-color: whitesmoke;">
@@ -333,14 +358,14 @@
                                           <%= message %>
                                        </p>
                                        <%}%>
-                                          <div class="form-group">
-                                             <div class="col-md-12">
-                                                <div class="radio">
-                                                   <label><input type="radio" value="razorpay" name="payment">UPI
-                                                   </label>
-                                                </div>
+                                       <div class="form-group">
+                                          <div class="col-md-12">
+                                             <div class="radio">
+                                                <label><input type="radio" value="razorpay" name="payment"> RazorPay
+                                                </label>
                                              </div>
                                           </div>
+                                       </div>
                                           <div class="form-group">
                                              <div class="col-md-12">
                                                
@@ -517,9 +542,11 @@
             const selectedAddressId = $("input[name=address]:checked").siblings("label").find("input[name=addressId]").val();
 
             console.log(payment);
+            console.log('dddddddddddddddddd');
 
 
             $.ajax({
+
                url: '/placeOrder',
                method: 'post',
                data: {
@@ -537,6 +564,7 @@
                   } else if (response.outOfStockProducts) {
                      Swal.fire("Oops!", "Product Out Of stock", "error");
                   } else {
+                     console.log('wwwwwwwwwwwwwwwww');
                      razorpay(response.order);
                   }
                },
@@ -552,11 +580,12 @@
    <script>
 
       function razorpay(order) {
+         console.log('xxxxxxxxxxxxxxxxxx');
          var options = {
-            "key": "rzp_test_tgKVVDCrIJi46N", // Enter the Key ID generated from the Dashboard
+            "key":'rzp_test_1cQGqu65aJwpha', // Enter the Key ID generated from the Dashboard
             "amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
             "currency": "INR",
-            "name": "WalkWise",
+            "name": "Minsto",
             "description": "Test Transaction",
             "image": "/user/images/logo.jpg",
             "order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
@@ -575,6 +604,7 @@
                "color": "#88c8bc"
             }
          };
+         console.log('dddddddddddddddddddddddddddddddddddddd');
 
          var rzp1 = new Razorpay(options);
          rzp1.open();
@@ -585,6 +615,7 @@
    <script>
 
       function verifyPayment(payment, order) {
+         console.log('aaaaaaaaaaaaaaaaaaa');
 
          $.ajax({
             url: '/verifyPayment',
@@ -594,6 +625,7 @@
                order
             },
             success: (res) => {
+               console.log('ssssssssssssss');
                if (res.success) {
                   console.log('paymnet success');
                   window.location.href = '/orderPlaced';
@@ -648,12 +680,14 @@
 
       function applyCoupon(code) {
 
-         let amount = document.getElementById('grand-total').innerHTML
+         let amount = document.getElementById('g ').innerHTML
          console.log(amount);
          console.log(code);
 
          $.ajax({
             url: '/applyCoupon',
+
+            console.log("applycooooo");
             method: 'post',
             data: {
                code,
@@ -678,6 +712,43 @@
             },
          })
 
+      }
+
+   </script>
+   <script>
+
+      function applyCoupon(code) {
+
+         let amount = document.getElementById('grand-total').innerHTML
+         console.log(amount);
+         console.log(code);
+
+         $.ajax({
+            url: '/applyCoupon',
+            method: 'post',
+            data:{
+               code,
+               amount
+            },
+            success: (res) => {
+               if (res.invalid) {
+                  Swal.fire('Oops!','Coupon Does Not Exist','error')
+               } else if (res.expire) {
+                  Swal.fire('Oops!','Coupon is Expired','error')
+               } else if (res.limit) {
+                  Swal.fire('Oops!','Coupon Usage Limit Exceeded','error')
+               } else if (res.cartamount) {
+                  Swal.fire('Oops!','Shop For Minimum Amount','error')
+               } else if (res.user) {
+                  Swal.fire('Oops!','You Have Already Used This Coupon Once','error')
+               } else if (res.couponKey) {
+                  document.getElementById("couponDicount").innerHTML = `${res.discount}`
+                  document.getElementById("grand-total").innerHTML = `${res.discountedTotal}`
+                  swal("Congratulations!!", "Coupon Added.", "success");
+            }
+         },
+      })
+         
       }
 
    </script>
@@ -842,3 +913,4 @@
       </div>
    </div>
 </div>
+

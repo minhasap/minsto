@@ -92,6 +92,7 @@
 										<li><a href="profile">Profile</a></li>
 										<li><a href="/viewOrders">Orders</a></li>
 										<li><a href="/logout">logout</a></li>
+										<li><a href="/Wishlist">wishlist</a></li>
 									<%} else {%>
 										<li><a href="login">login</a></li>
 									<% } %>
@@ -240,6 +241,14 @@
 								<span class="addtocart"><button onclick="addToCart('<%= products._id %>')"
 										class="btn btn-primary btn-addtocart d-inline"><i
 											class="icon-shopping-cart d-inline"></i> Add to Cart</button></span>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-12 text-center float-left">
+								<input type="hidden" name="id" value="<%= products._id %>">
+								<span class="addToWish"><button onclick="addwish('<%= products._id %>')"
+										class="btn btn-primary btn-addToWish d-inline"><i
+											></i> Add to wishlist</button></span>
 							</div>
 						</div>
 						
@@ -571,7 +580,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 							confirmButtonText: '<a  style="color: aliceblue;"  href="/cart">GO TO CART</a>',
 							showCancelButton: true,
 							showCloseButton: true
-						})
+						});
 
 					} else if (response.outOfStock) {
 						swal.fire(
@@ -591,6 +600,33 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 		}
 
 	</script>
+	<script>
+        const addwish = function (id) {
+            $.ajax({
+                url: "/addtowishlist",
+                method: 'get',
+                data: {
+                    id: id
+                },
+                success: function (response) {
+                    if (response.status) {
+                        Swal.fire(
+                            'Saved Wishlist!',
+                            'You clicked the button!',
+                            'success'
+                        );
+                    } else {
+                        Swal.fire(
+                            'Product Already in Wishlist!',
+                            'This product is already in your wishlist.',
+                            'info'
+                        );
+                    }
+
+                }
+            });
+        }
+    </script>
 
 	</body>
 </html>

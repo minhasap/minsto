@@ -15,7 +15,7 @@ userRouter.use(nocache());
 const cartController = require('../controller/cartController');
 const userController = require('../controller/usercontroller');
 const orderController = require('../controller/order');
-
+const couponController= require('../controller/coupenController')
 userRouter.set('view engine', 'ejs');
 userRouter.set('views', './views/user');
 
@@ -34,14 +34,20 @@ userRouter.get('/resendotp', userController.resendOTP);
 userRouter.get('/resendotplogin', userController.resendOTP);
 
 
-userRouter.get('/home', userController.loadHome);
-userRouter.get('/shop',userController.loadShop);
-userRouter.get('/productdetail', userController.productDetail);
+userRouter.get('/home', auth.blockedstatus,userController.loadHome);
+userRouter.get('/shop',auth.blockedstatus,userController.loadShop);
+userRouter.get('/productdetail',auth.blockedstatus, userController.productDetail);
 userRouter.get('/logout', auth.isLogin, userController.userLogout);
 userRouter.get('/block',userController.blockUser)
 userRouter.get('/unblock',userController.unblockUser)
-userRouter.get('/cart',auth.isLogin,cartController.loadCart)
-userRouter.get('/addtocart',auth.isLogin,cartController.addToCart)
+userRouter.get('/cart',auth.blockedstatus,auth.isLogin,cartController.loadCart)
+userRouter.get('/addtocart',auth.blockedstatus,auth.isLogin,cartController.addToCart)
+userRouter.get('/Wishlist',auth.isLogin,userController.loadWishlist)
+userRouter.post('/Wishlist',auth.isLogin,userController.addtowishlist)
+// userRouter.get('/addtowishlist',auth.isLogin,userController.addtowishlist)
+userRouter.get("/addtowishlist",auth.isLogin,nocache(),userController.addtowishlist);
+
+
 userRouter.get('/profile',auth.isLogin,userController.detaileprofile)
 userRouter.get('/checkout',auth.isLogin,orderController.loadCheckout)
 
@@ -51,9 +57,19 @@ userRouter.get("/addressList", auth.isLogin, userController.loadAddressList);
 
 userRouter.get('/editAddress',auth.isLogin,userController.loadEditAddress);
 userRouter.get('/deleteAddress',auth.isLogin,userController.deleteAddress);
+
+userRouter.get("/updateProfile", auth.isLogin, userController.loadUpdateData);
+userRouter.post("/updateProfile", auth.isLogin, userController.updateData);
+
+
 userRouter.get('/orderPlaced',auth.isLogin,orderController.loadOrderPLaced)
 userRouter.post('/placeOrder',auth.isLogin,orderController.placeOrder)
 userRouter.get('/viewOrders',auth.isLogin,orderController.loadOrderList)
+userRouter.get('/cancelOrder',auth.isLogin,orderController.cancelOrder);
+
+
+
+userRouter.get("/wallethsitory", auth.isLogin, userController.loadWalletHistory);
 
 
 
@@ -68,7 +84,12 @@ userRouter.post('/', userController.verifyLogin);
 
 userRouter.post('/addtocart',auth.isLogin,cartController.addToCart);
 userRouter.post('/changeQty',auth.isLogin,cartController.changeQty)
-userRouter.post('/removeCartItem',auth.isLogin,cartController.removeItemCart)
+userRouter.post('/removeCartItem',auth.isLogin,cartController.removeItemCart);
+userRouter.post('/removeWish',auth.isLogin,userController.removeWishItem);
 
-module.exports = userRouter;
+userRouter.post('/verifyPayment', orderController.verifyPayment);
+userRouter.post('/applyCoupon',couponController.applyCoupon);
+
+
+module.exports = userRouter;  
 

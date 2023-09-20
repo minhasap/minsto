@@ -91,11 +91,19 @@ const userSchema = new mongoose.Schema({
         default:0,
     },
     wallehistory:[{
-        peramount:{
+        amount:{
             type:Number,
         },
         date:{
             type:String
+        }, date: {
+            type: Date,
+        },
+        transaction: {
+            type: String,
+        },
+        description: {
+            type: String,
         }
     }],
 

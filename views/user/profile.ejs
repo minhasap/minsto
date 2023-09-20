@@ -105,7 +105,7 @@
 
     <div class="container mt-4">
         <div class="row">
-            <div class="col-lg-3 my-lg-0 my-md-1">
+             <div class="col-lg-3 my-lg-0 my-md-1">
                 <div id="sidebar" class="bg-purple">
                     <div class="h4 text-white">Account</div>
                     <ul>
@@ -114,17 +114,27 @@
                                 <div class="fas fa-box pt-2 me-3"></div>
                                 <div class="d-flex flex-column">
                                     <div class="link">My Account</div>
-                                    <div class="link-desc"></div>
+                                    <div class="link-desc">View & Manage orders and returns</div>
                                 </div>
                             </a>
                         </li>
-                        
+
+                        <li>
+                            <a href="/viewOrders" class="text-decoration-none d-flex align-items-start">
+                                <div class="fas fa-box-open pt-2 me-3"></div>
+                                <div class="d-flex flex-column">
+                                    <div class="link">My Orders</div>
+                                    <div class="link-desc">View & Manage orders and returns</div>
+                                </div>
+                            </a>
+                        </li>
+
                         <li>
                             <a href="/addressList" class="text-decoration-none d-flex align-items-start">
                                 <div class="far fa-address-book pt-2 me-3"></div>
                                 <div class="d-flex flex-column">
-                                    <div class="link">Address</div>
-                                    <div class="link-desc"></div>
+                                    <div class="link">Address Book</div>
+                                    <div class="link-desc">View & Manage Addresses</div>
                                 </div>
                             </a>
                         </li>
@@ -133,47 +143,89 @@
                                 <div class="far fa-user pt-2 me-3"></div>
                                 <div class="d-flex flex-column">
                                     <div class="link">My Profile</div>
-                                    <div class="link-desc"></div>
+                                    <div class="link-desc">Change your profile details & password</div>
                                 </div>
                             </a>
                         </li>
-                       
+
+                        <li>
+                            <span class="text-decoration-none d-flex align-items-start"><a href="#">
+                                    <div class="fas fa-headset pt-2 me-3"></div>
+                                </a>
+                                <div class="d-flex flex-column dropright">
+                                    <div class="dropdown">
+                                        <div class="link dropdown-toggle" type="button" id="dropdownMenu2"
+                                            aria-haspopup="true" aria-expanded="false" data-toggle="dropdown"
+                                            aria-haspopup="true" aria-expanded="false">
+                                            Wallet Options
+                                        </div>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                                            <a class="dropdown-item" href="/wallethsitory">wallet History</a>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item" data-toggle="modal"
+                                                data-target="#exampleModalCenter">Topup Wallet</a>
+                                        </div>
+                                    </div>
+                                    <div class="link-desc">Wallet History & Wallet Topup</div>
+                                </div>
+                            </span>
+                        </li>
                     </ul>
                 </div>
             </div>
             <div class="col-lg-9 my-lg-0 my-1">
                 <div id="main-content" class="bg-white border">
                     <div class="d-flex flex-column">
-                        <div class="h5"><%= user.firstName %> <%= user.lastName %>,</div>
-                        <div>Logged in as: <%= user.email %></div>
+                        <div class="h5">
+                            <%= user.firstName %>
+                                <%= user.lastName %>,
+                        </div>
+                        <div>Logged in as: <%= user.email %>
+                        </div>
                     </div>
                     <a href="/viewOrders">
-                    <div class="d-flex my-4 flex-wrap">
-                            <div class="box mr-2 my-1 bg-light">
+                        <div class="d-flex my-4 flex-wrap ">
+                            <div class="box mr-2 my-1 bg-light p-2">
                                 <img src="https://www.freepnglogos.com/uploads/box-png/cardboard-box-brown-vector-graphic-pixabay-2.png"
                                     alt="">
                                 <div class="d-flex align-items-center mt-2">
                                     <div class="tag">Orders placed</div>
-                                    <div class="ms-auto number"> <%= orderLength %></div>
+                                    <div class="ms-auto number">
+                                        <%= orderLength %>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
                     </a>
                     <a href="/cart">
-                        <div class="box mr-2 my-1 bg-light">
+                        <div class="box mr-2 my-1 bg-light p-2">
                             <img src="https://www.freepnglogos.com/uploads/shopping-cart-png/shopping-cart-campus-recreation-university-nebraska-lincoln-30.png"
                                 alt="">
                             <div class="d-flex align-items-center mt-2">
                                 <div class="tag">Items in Cart : </div>
-                                <div class="ms-auto number">  <%=length%></div>
+                                <div class="ms-auto number">
+                                    <%=length%>
+                                </div>
                             </div>
                         </div>
                     </a>
-                      
+                     
+                    <div class="box mr-2 my-1 bg-light p-2">
+                        <img src="https://www.freepnglogos.com/uploads/money-png/wallet-money-coins-pictures-png-19.png"
+                            alt="">
+
+                        <div class="d-flex align-items-center mt-2">
+                            <div class="tag">Wallet: </div>
+                            <div class="ms-auto number" style="font-size: 14;">₹ <%= user.wallet %>
+                            </div>
+
+
+                        </div>
                     </div>
-                    
                 </div>
+
             </div>
         </div>
+    </div>
     </div>
     
 

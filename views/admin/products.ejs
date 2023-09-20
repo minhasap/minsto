@@ -66,11 +66,17 @@
                     </div>
                 </div>
                 <div class="navbar-nav w-100">
-              <a href="home" class="nav-item nav-link "><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
-                    <a href="usermanagement" class="nav-item nav-link"><i class="fa fa-user me-2"></i>User management</a>
-                    <a href="category" class="nav-item nav-link"><i class="fa fa-keyboard me-2"></i>Category</a>                   
-                    <a href="products" class="nav-item nav-link active active"><i class="fa fa-th me-2"></i>Products</a>
-                    <a href="Orders" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Orders</a>
+                  <a href="home" class="nav-item nav-link  "><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
+                  <a href="usermanagement" class="nav-item nav-link"><i class="fa fa-user me-2"></i>User management</a>
+                  <a href="category" class="nav-item nav-link"><i class="fa fa-keyboard me-2"></i>Category</a>                   
+                  <a href="products" class="nav-item nav-link active"><i class="fa fa-th me-2"></i>Products</a>
+                  <a href="Orders" class="nav-item nav-link "><i class="fa fa-th me-2"></i>Orders</a>
+                  <a href="coupon" class="nav-item nav-link"><i class="fa fa-door-open"></i>Coupon</a>
+                  <a href="sales" class="nav-item nav-link "><i class="fa fa-book"></i>Sales</a>
+                  <a href="banner" class="nav-item nav-link"><i class="fa fa-folder"></i>Banners</a>
+                  <a href="salesReport" class="nav-item nav-link "><i class="fa fa-book"></i>Sales Report</a>
+                
+
                 
                 
                 
@@ -127,6 +133,7 @@
                   <th scope="col">Name</th>
                   <th scope="col">Brand</th>
                   <th scope="col">Price</th>
+                  <th scope="col">category</th>
                
                   <th scope="col">Quantity</th>
                   
@@ -143,6 +150,7 @@
                       <td><%= product.productname %></td>
                       <td><%= product.brand %></td>
                       <td><%= product.price %></td>
+                      <td><%=  %></td>
                    
                       <td><%= product.quantity %></td>
                       
@@ -210,10 +218,20 @@
             return confirm("Hide this Product?")
         }
         function showconfirm(node) {
-            return confirm("Show this Product?")
+            return confirm("Show this Product?") 
         }
         
     </script>
+    <!-- <script>
+  $(document).ready(function() {
+    $('#mytable').DataTable({
+      paging: true, // Enable pagination
+      lengthChange: false, // Hide length change option
+      pageLength: 10, // Number of rows per page
+    });
+  });
+</script> -->
+
 
 
 
@@ -221,3 +239,19 @@
 </body>
 
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

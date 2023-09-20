@@ -46,11 +46,11 @@
         <div class="sidebar pe-4 pb-3">
             <nav class="navbar bg-light navbar-light">
                 <a href="index.html" class="navbar-brand mx-4 mb-3">
-                    <h3 class="text-primary"><i class="fa me-2"></i>MinSto</h3>
+                    <h3 class="text-primary"><i class="fa me-2"></i>Minsto.</h3>
                 </a>
                 <div class="d-flex align-items-center ms-4 mb-4">
                     <div class="position-relative">
-                        <img class="rounded-circle" src="/user/min.jpg" alt="" style="width: 40px; height: 40px;">
+                        <img class="rounded-circle" src="/admin/img/user.jpg" alt="" style="width: 40px; height: 40px;">
                         <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
                     </div>
                     <div class="ms-3">
@@ -58,12 +58,16 @@
                         <span>Admin</span>
                     </div>
                 </div>
-                <div class="navbar-nav w-100">
-                    <a href="#" class="nav-item nav-link active"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
+                    <div class="navbar-nav w-100">
+                    <a href="home" class="nav-item nav-link active "><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
                     <a href="usermanagement" class="nav-item nav-link"><i class="fa fa-user me-2"></i>User management</a>
                     <a href="category" class="nav-item nav-link"><i class="fa fa-keyboard me-2"></i>Category</a>                   
                     <a href="products" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Products</a>
-                    <a href="Orders" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Orders</a>
+                    <a href="Orders" class="nav-item nav-link "><i class="fa fa-th me-2"></i>Orders</a>
+                    <a href="coupon" class="nav-item nav-link"><i class="fa fa-door-open"></i>Coupon</a>
+                    <a href="sales" class="nav-item nav-link "><i class="fa fa-book"></i>Sales</a>
+                    <a href="banner" class="nav-item nav-link"><i class="fa fa-folder"></i>Banners</a>
+                    <a href="salesReport" class="nav-item nav-link "><i class="fa fa-book"></i>Sales Report</a>
                   
 
                     
@@ -113,7 +117,7 @@
                             <div class="ms-3">
                                 <p class="mb-2">Total Orders</p>
                                 <h6 class="mb-0">
-                                    
+                                    <%=totalOrder%>
                                 </h6>
                             </div>
                         </div>
@@ -123,7 +127,7 @@
                             <i class="fa fa-chart-bar fa-3x text-primary"></i>
                             <div class="ms-3">
                                 <p class="mb-2">Total Sale</p>
-                                <h6 class="mb-0">
+                                <h6 class="mb-0">$<%= total%>
                                 </h6>
                             </div>
                         </div>
@@ -134,7 +138,7 @@
                             <div class="ms-3">
                                 <p class="mb-2">Total Users</p>
                                 <h6 class="mb-0">
-                                    
+                                    <%=totalUser%>
                                 </h6>
                             </div>
                         </div>
@@ -145,7 +149,7 @@
                             <div class="ms-3">
                                 <p class="mb-2">Total Products</p>
                                 <h6 class="mb-0">
-                                   
+                                    <%= totalProducts%>
                                 </h6>
                             </div>
                         </div>
@@ -162,7 +166,21 @@
                     <canvas id="myChart"></canvas>
                 </div>
                 <hr>
-               
+                <div style="width: 45rem;">
+                    <canvas id="barChart"></canvas>
+                    <input type="hidden" id="input1" value="<%=yearChart[0]%>">
+                    <input type="hidden" id="input2" value="<%=yearChart[1]%>">
+                    <input type="hidden" id="input3" value="<%=yearChart[2]%>">
+                    <input type="hidden" id="input4" value="<%=yearChart[3]%>">
+                    <input type="hidden" id="input5" value="<%=yearChart[4]%>">
+                    <input type="hidden" id="input6" value="<%=yearChart[5]%>">
+                    <input type="hidden" id="input7" value="<%=yearChart[6]%>">
+                    <input type="hidden" id="input8" value="<%=yearChart[7]%>">
+                    <input type="hidden" id="input9" value="<%=yearChart[8]%>">
+                    <input type="hidden" id="input10" value="<%=yearChart[9]%>">
+                    <input type="hidden" id="input11" value="<%=yearChart[10]%>">
+                    <input type="hidden" id="input12" value="<%=yearChart[11]%>">
+                </div>
             </div>
             <!-- Sales Chart End -->
            
@@ -237,9 +255,12 @@
             data: {
                 labels: ['COD', 'online'],
                 datasets: [{
-                    
-                    
-                   
+                    label: 'Payment Method',
+                    data: ['<%=cod%>', '<%=online%>'],
+                    backgroundColor: [
+                        'rgb(191, 191, 191)',
+                        'rgb(54, 162, 235)'
+                    ],
                     hoverOffset: 4
                 }]
             }

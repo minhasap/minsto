@@ -118,42 +118,72 @@
 
    <div class="container mt-4">
       <div class="row">
-         <div class="col-lg-3 my-lg-0 my-md-1 mb-sm-4 py-5 ">
-            <div id="sidebar" class="bg-purple">
-               <div class="h4 text-white">Account</div>
-               <ul>
-                  <li>
-                     <a href="/profile" class="text-decoration-none d-flex align-items-start">
-                        <div class="fas fa-box pt-2 me-3"></div>
-                        <div class="d-flex flex-column">
-                           <div class="link">My Account</div>
-                           <div class="link-desc"></div>
-                        </div>
-                     </a>
-                  </li>
-                 
-                  <li class="active">
-                     <a href="/addressList" class="text-decoration-none d-flex align-items-start">
-                        <div class="far fa-address-book pt-2 me-3"></div>
-                        <div class="d-flex flex-column">
-                           <div class="link">Address Book</div>
-                           <div class="link-desc"></div>
-                        </div>
-                     </a>
-                  </li>
-                  <li>
-                     <a href="/updateProfile" class="text-decoration-none d-flex align-items-start">
-                        <div class="far fa-user pt-2 me-3"></div>
-                        <div class="d-flex flex-column">
-                           <div class="link">Update Profile</div>
-                           <div class="link-desc"></div>
-                        </div>
-                     </a>
-                  </li>
-             
-               </ul>
-            </div>
-         </div>
+         <div id="sidebar" class="bg-purple">
+                    <div class="h4 text-white">Account</div>
+                    <ul>
+                        <li >
+                            <a href="#" class="text-decoration-none d-flex align-items-start">
+                                <div class="fas fa-box pt-2 me-3"></div>
+                                <div class="d-flex flex-column">
+                                    <div class="link">My Account</div>
+                                    <div class="link-desc">View & Manage orders and returns</div>
+                                </div>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="/viewOrders" class="text-decoration-none d-flex align-items-start">
+                                <div class="fas fa-box-open pt-2 me-3"></div>
+                                <div class="d-flex flex-column">
+                                    <div class="link">My Orders</div>
+                                    <div class="link-desc">View & Manage orders and returns</div>
+                                </div>
+                            </a>
+                        </li>
+
+                        <li class="active">
+                            <a href="/addressList" class="text-decoration-none d-flex align-items-start">
+                                <div class="far fa-address-book pt-2 me-3"></div>
+                                <div class="d-flex flex-column">
+                                    <div class="link">Address Book</div>
+                                    <div class="link-desc">View & Manage Addresses</div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/updateProfile" class="text-decoration-none d-flex align-items-start">
+                                <div class="far fa-user pt-2 me-3"></div>
+                                <div class="d-flex flex-column">
+                                    <div class="link">My Profile</div>
+                                    <div class="link-desc">Change your profile details & password</div>
+                                </div>
+                            </a>
+                        </li>
+
+                        <li>
+                            <span class="text-decoration-none d-flex align-items-start"><a href="#">
+                                    <div class="fas fa-headset pt-2 me-3"></div>
+                                </a>
+                                <div class="d-flex flex-column dropright">
+                                    <div class="dropdown">
+                                        <div class="link dropdown-toggle" type="button" id="dropdownMenu2"
+                                            aria-haspopup="true" aria-expanded="false" data-toggle="dropdown"
+                                            aria-haspopup="true" aria-expanded="false">
+                                            Wallet Options
+                                        </div>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                                            <a class="dropdown-item" href="/wallethsitory">wallet History</a>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item" data-toggle="modal"
+                                                data-target="#exampleModalCenter">Topup Wallet</a>
+                                        </div>
+                                    </div>
+                                    <div class="link-desc">Wallet History & Wallet Topup</div>
+                                </div>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
 
 
          <div class="col-md-9">
@@ -185,14 +215,16 @@
                            </div>
                         </div>
                      </div>
-                     <ul class="nav nav-tabs flex-column border-0 pt-4 pl-4 pb-4" id="myTab" role="tablist">
-                        <li class="nav-item">
-                           <a class="nav-link" id="addresses-tab" data-toggle="tab" href="#addresses" role="tab"
-                              aria-controls="addresses" aria-selected="false"><i class="icofont-location-pin"></i>
-                              Address</a>
-                        </li>
-                     </ul>
                   </div>
+                  <ul class="nav nav-tabs flex-column border-0 pt-4 pl-4 pb-4" id="myTab" role="tablist">
+                     <a href="checkout">
+                        <span class="addtocart">
+                           <button class="btn btn-primary btn-outline-primary  d-inline">
+                              <i ></i> Go toCheckout
+                           </button>
+                        </span>
+                     </a>
+                  </ul>
                </div>
 
             </div>

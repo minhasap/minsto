@@ -6,6 +6,13 @@ const fs = require('fs');
 
 const {default:mongoose}= require('mongoose');
 const { log } = require('util');
+const Razorpay = require('razorpay');
+// const { log } = require('console');
+
+const instance = new Razorpay({
+   key_id: process.env.RAZOR_KEY_ID,
+   key_secret: process.env.RAZOR_SECRET,
+});
 
 
 
@@ -173,20 +180,18 @@ const placeOrder = async (req,res) => {
    try {
       if (req.session.userData && req.session.userData._id) {
          const userId = req.session.userData._id;
-         const { total, address,  addressId, payment } = req.body;
+         const { total, payment, address, wallet, addressId } = req.body;
 
          const user = await User.findById(userId);
-         console.log(payment);
 
          if (address === null) return res.json({ codFailed: true });
 
          const cartData = await Cart.findOne({ user: user._id });
          const cartProducts = cartData.products;
          const status = payment == 'cod' ? 'Placed' : 'Pending';
-      
 
          let wall;
-         let cod; 
+         let cod;
          if (user.wallet < total) {
             wall = 10;
             cod = user.wallet - total - 10
@@ -200,7 +205,7 @@ const placeOrder = async (req,res) => {
             deliveryAddress: address,
             addressId,
             user: userId,
-            paymentMethode: payment,
+            paymentMethod: payment,
             products: cartProducts,
             totalPrice: total,
             orderDate: new Date(),
@@ -253,6 +258,7 @@ const placeOrder = async (req,res) => {
 
             res.json({ codSuccess: true });
          } else {
+            console.log('fffffffffffffff');
             const options = {
                amount: total * 100,
                currency: 'INR',
@@ -270,9 +276,10 @@ const placeOrder = async (req,res) => {
          res.redirect('/login');
       }
    } catch (error) {
-      console.log('placeOrder Methoddd: ', error.message);
-   };
+      console.log('placeOrder method: ', error.message);
+   }
 };
+
 
 
 
@@ -280,6 +287,7 @@ const placeOrder = async (req,res) => {
 const verifyPayment = async (req, res) => {
 
    try {
+      log('tttzzzzzzzzzzzzzzzzzzzz')
 
       if (req.session.userData && req.session.userData._id) {
 
@@ -426,15 +434,129 @@ const getOrder = async (req,res)=>{
 }
 
 
+const viewOrder = async (req, res) => { 
+   try {
+       const orderId = req.query.id;
+       const orderData = await Order.findById(orderId).populate(
+           "products.product_id"
+       );
+       const userId = orderData.user;
+       const userData = await User.findById(userId);
+       if(userData){
+
+          res.render("single_order", { orderData, userData });
+       }else{
+         console.log(error,"vieworder error");
+       }
+   } catch (error) {
+       console.log(error.message);
+   }
+};
+
+
+
+
+const cancelOrder = async (req, res) => {
+
+   try {
+
+      const userId = req.session.userData._id
+      const orderId = req.query.id;
+      const order = await Order.findById(orderId);
+
+      const date = new Date().toISOString().substring(0,10);
+
+      if (order.paymentMethod == 'razorpay' || order.paymentMethod == 'cod') {
+         await User.findByIdAndUpdate(userId, {
+            $inc: { wallet: order.totalPrice },
+            $push: {
+               wallehistory: {
+                  amount:order.totalPrice,
+                  date,
+                  transaction: "Credit",
+                  description: "Order Cancelled",
+               }
+            }
+         }).then(() => {
+            console.log('wallet amount updated');
+         })
+      }
+
+      const updatedOrder = await Order.findByIdAndUpdate(orderId, {
+         $set: { status: 'Cancelled' }
+      })
+
+      if (updatedOrder) {
+         res.redirect('/viewOrders')
+      }
+
+   } catch (error) {
+      console.log('canncelOrder Method :-  ', error.message);
+   }
+
+};
+
+//sales report----------------
+const sales = async (req, res) => {
+   try {
+       const { from, to } = req.query;
+       let orderData = await Order.find();
+       let SubTotal = 0;
+ 
+       // calculate subtotal of all orders
+       orderData.forEach(function (value) {
+           SubTotal = SubTotal + value.totalPrice;
+       });
+ 
+       // filter orders by date range
+       if (from && to) {
+           orderData = await Order.find({
+               Date: { $gte: new Date(from), $lte: new Date(to) },
+           });
+       }
+ 
+       const status = await Order.find({ "product.status": { $exists: true } });
+       const value = req.query.value || "ALL";
+ 
+       if (value == "cod") {
+           const data = await Order.find({ paymentMethod: "cod" });
+           res.render("sales", { data, message: "COD", status, value });
+       } else if (value == "online") {
+           const data = await Order.find({ paymentMethod: "online" });
+           res.render("sales", { data, message: "Online", status, value });
+       } else {
+           const data = orderData;
+           res.render("sales", { data, status, value, total: SubTotal  }); 
+       }
+   } catch (error) {
+       console.log(error.message);
+   }
+ }
+ const updatestatus = async (req, res) => {
+   try {
+       const status = req.body.status;
+       const orderId = req.body.orderId;
+       await Order.findByIdAndUpdate(orderId, { status: status });
+       res.redirect("orders");
+   } catch (error) {
+       console.log(error.message);
+   }
+};
+
+
+
 module.exports ={
     loadCheckout,
     placeOrder,
     checkWallet,
     loadOrderPLaced,
     addAddress,
+    updatestatus,
     verifyPayment,
     loadOrderList,
     getOrder,
-
+    viewOrder,
+    cancelOrder,
+    sales
 }
 

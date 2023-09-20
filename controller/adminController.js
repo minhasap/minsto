@@ -3,8 +3,10 @@ const bcrypt= require("bcrypt");
 const admin = require('../models/adminmodel')
 const products = require('../models/productModels');
 const categorycollection= require('../models/categoryModel')
+const Order = require("../models/orderModel");
 
-const getAdminLogin = async (req, res) => {
+
+const getAdminLogin = async (req, res) => { 
   res.render("adminlogin")
   }
   
@@ -33,14 +35,71 @@ const verifyAdminLogin = (req, res) => {
     }
   };
   
-  const loadAdminHome = async (req, res) => {
-    try {
-      console.log('Loaded Admin Home');
-      res.render('home');
-    } catch (error) {
-      console.log(error);
+  //home----------------------------------------------------
+const loadAdminHome = async (req, res) => {
+  const orderData = await Order.find({ status: { $ne: "cancelled" } });
+  let SubTotal = 0;
+  orderData.forEach(function (value) {
+    SubTotal = SubTotal + value.totalAmount;
+  });
+  const cod = await Order.find({ paymentMethod: "cod" }).count();
+  const online = await Order.find({ paymentMethod: "online" }).count();
+  const totalOrder = await Order.find({ status: { $ne: "cancelled" } }).count();
+  const totalUser = await User.find().count();
+  const totalProducts = await products.find().count();
+  const date = new Date();
+  const year = date.getFullYear();
+  const currentYear = new Date(year, 0, 1);
+  const salesByYear = await Order.aggregate([
+    {
+      $match: {
+        createdAt: { $gte: currentYear },
+        status: { $ne: "cancelled" },
+      },
+    },
+    {
+      $group: {
+        _id: { $dateToString: { format: "%m", date: "$createdAt" } },
+        total: { $sum: "$totalAmount" },
+        count: { $sum: 1 },
+      },
+    },
+    { $sort: { _id: 1 } },
+  ]);
+
+  let sales = [];
+  for (i = 1; i < 13; i++) {
+    let result = true;
+    for (j = 0; j < salesByYear.length; j++) {
+      result = false;
+      if (salesByYear[j]._id == i) {
+        sales.push(salesByYear[j]);
+        break;
+      } else {
+        result = true;
+      }
+    }
+    if (result) {
+      sales.push({ _id: i, total: 0, count: 0 });
     }
   }
+
+  let yearChart = [];
+  for (let i = 0; i < sales.length; i++) {
+    yearChart.push(sales[i].total);
+  }
+
+  res.render("home", {
+    data: orderData,
+    total: SubTotal,
+    cod,
+    online,
+    totalOrder,
+    totalUser,
+    totalProducts,
+    yearChart,
+  });
+};
 
   const userManagement = async (req, res) => { 
     try {
@@ -70,6 +129,56 @@ const verifyAdminLogin = (req, res) => {
         
     }
   }
+  const getSalesReport = async (req, res) => {
+    try {
+      let start;
+      let end;
+      req.query.start ? (start = new Date(req.query.start)) : (start = "ALL");
+      req.query.end ? (end = new Date(req.query.end)) : (end = "ALL");
+      if (start != "ALL" && end != "ALL") {
+        const data = await Order.aggregate([
+          {
+            $match: {
+              $and: [
+                { Date: { $gte: start } },
+                { Date: { $lte: end } },
+                { status: { $eq: "Delivered" } },
+              ],
+            },
+          },
+        ]);
+        let SubTotal = 0;
+        data.forEach(function (value) {
+          SubTotal = SubTotal + value.totalPrice;
+        });
+        res.render("salesReport", { data, total: SubTotal }); 
+      } else {
+        const orderData = await Order.find({ status: { $eq: "Delivered" } });
+        let SubTotal = 0;
+        orderData.forEach(function (value) {
+          SubTotal = SubTotal + value.totalPrice;
+        });
+        res.render("salesReport", { data: orderData, total: SubTotal }); 
+      }
+    } catch (error) {
+      res.redirect("/serverERR", { message: error.message });
+      console.log(error.message);
+    }
+  };
+  
+  const updatestatus = async (req, res) => {
+    try {
+        const status = req.body.status;
+        const orderId = req.body.orderId;
+        await Order.findByIdAndUpdate(orderId, { status: status });
+        res.redirect("order");
+    } catch (error) {
+        console.log(error.message);
+    }
+};
+
+
+
 
 
  
@@ -80,6 +189,9 @@ const verifyAdminLogin = (req, res) => {
     loadAdminHome,
     userManagement,
     getCategory,
-    getproducts
+    getproducts,
+  getSalesReport,
+  updatestatus
+    
   };
   

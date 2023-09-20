@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 	<head>
-	<title>Footwear - Free Bootstrap 4 Template by Colorlib</title>
+	<title>Minsto.shop</title>
    <meta charset="utf-8">
    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -93,6 +93,7 @@
 												<li><a href="profile">Profile</a></li>
 												<li><a href="/viewOrders">Orders</a></li>
 												<li><a href="/logout">logout</a></li>
+												<li><a href="/Wishlist">wishlist</a></li>
 											<%} else {%>
 												<li><a href="login">login</a></li>
 											<% } %>
@@ -187,27 +188,27 @@
 									</ul>
 								</div>
 							</div>
-							<!-- <div class="col-sm-12">
+							<div class="col-sm-12">
 								<div class="side border mb-1">
 									<h3>Categories</h3>
 									<ul>
 										<% category.forEach(category=> {
-											if (!category.is_hidden) { %>
+											if (!category.status) { %>
 											<li>
 												<label>
 													<input type="checkbox" name="categories" value="<%= category._id %>"
 														<% if (Array.isArray(categories) ?
-														categories.includes(category.name) : categories==category.name)
+														categories.includes(category.category) : categories==category.category)
 														{ %>
 													checked
 													<% } %>
-														><%= category.name %>
+														><%= category.category %>
 												</label>
 											</li>
 											<% } }); %>
 									</ul>
 								</div>
-							</div> -->
+							</div>
 
 
 
