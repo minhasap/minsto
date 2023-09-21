@@ -177,6 +177,12 @@ const loadAdminHome = async (req, res) => {
     }
 };
 
+//Logout---------------------------------------------------
+const getlogout = async (req, res) => {
+  req.session.login = false;
+  res.redirect("admin");
+};
+
 
 
 
@@ -191,7 +197,8 @@ const loadAdminHome = async (req, res) => {
     getCategory,
     getproducts,
   getSalesReport,
-  updatestatus
+  updatestatus,
+  getlogout
     
   };
   

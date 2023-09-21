@@ -1,4 +1,5 @@
-require('dotenv/config');
+require('dotenv/config'); // This will load the variables from the .env file
+
 
 
 const mongoose = require("mongoose");

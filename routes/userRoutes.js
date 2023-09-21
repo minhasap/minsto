@@ -25,51 +25,51 @@ userRouter.use(express.json()); // To parse JSON data
 userRouter.use(express.urlencoded({ extended: true }));
 
 const isBlockedd = require('../middleware/blocked')
-userRouter.get('/', userController.loadHome);
+userRouter.get('/',nocache(), userController.loadHome);
 
-userRouter.get('/login',auth.isLogout,userController.loginLoad)
-userRouter.get('/signup',auth.isLogout,userController.loadSignup)
-userRouter.get('/otp', userController.loadOTP);
-userRouter.get('/resendotp', userController.resendOTP);
-userRouter.get('/resendotplogin', userController.resendOTP);
+userRouter.get('/login',nocache(),auth.isLogout,userController.loginLoad)
+userRouter.get('/signup',nocache(),auth.isLogout,userController.loadSignup)
+userRouter.get('/otp',nocache(), userController.loadOTP);
+userRouter.get('/resendotp',nocache(), userController.resendOTP);
+userRouter.get('/resendotplogin',nocache(), userController.resendOTP);
 
 
-userRouter.get('/home', auth.blockedstatus,userController.loadHome);
-userRouter.get('/shop',auth.blockedstatus,userController.loadShop);
-userRouter.get('/productdetail',auth.blockedstatus, userController.productDetail);
-userRouter.get('/logout', auth.isLogin, userController.userLogout);
-userRouter.get('/block',userController.blockUser)
-userRouter.get('/unblock',userController.unblockUser)
-userRouter.get('/cart',auth.blockedstatus,auth.isLogin,cartController.loadCart)
-userRouter.get('/addtocart',auth.blockedstatus,auth.isLogin,cartController.addToCart)
-userRouter.get('/Wishlist',auth.isLogin,userController.loadWishlist)
+userRouter.get('/home',nocache(), auth.blockedstatus,userController.loadHome);
+userRouter.get('/shop',nocache(),auth.blockedstatus,userController.loadShop);
+userRouter.get('/productdetail',nocache(),auth.blockedstatus, userController.productDetail);
+userRouter.get('/logout',nocache(), auth.isLogin, userController.userLogout);
+userRouter.get('/block',nocache(),userController.blockUser)
+userRouter.get('/unblock',nocache(),userController.unblockUser)
+userRouter.get('/cart',nocache(),auth.blockedstatus,auth.isLogin,cartController.loadCart)
+userRouter.get('/addtocart',nocache(),auth.blockedstatus,auth.isLogin,cartController.addToCart)
+userRouter.get('/Wishlist',nocache(),auth.isLogin,userController.loadWishlist)
 userRouter.post('/Wishlist',auth.isLogin,userController.addtowishlist)
 // userRouter.get('/addtowishlist',auth.isLogin,userController.addtowishlist)
-userRouter.get("/addtowishlist",auth.isLogin,nocache(),userController.addtowishlist);
+userRouter.get("/addtowishlist",nocache(),auth.isLogin,nocache(),userController.addtowishlist);
 
 
-userRouter.get('/profile',auth.isLogin,userController.detaileprofile)
-userRouter.get('/checkout',auth.isLogin,orderController.loadCheckout)
+userRouter.get('/profile',nocache(),auth.isLogin,userController.detaileprofile)
+userRouter.get('/checkout',nocache(),auth.isLogin,orderController.loadCheckout)
 
-userRouter.get('/addAddressList',userController.loadAddressList);
-userRouter.get('/addAddress',userController.loadAddAddress);
-userRouter.get("/addressList", auth.isLogin, userController.loadAddressList);
+userRouter.get('/addAddressList',nocache(),userController.loadAddressList);
+userRouter.get('/addAddress',nocache(),userController.loadAddAddress);
+userRouter.get("/addressList",nocache(), auth.isLogin, userController.loadAddressList);
 
-userRouter.get('/editAddress',auth.isLogin,userController.loadEditAddress);
-userRouter.get('/deleteAddress',auth.isLogin,userController.deleteAddress);
+userRouter.get('/editAddress',nocache(),auth.isLogin,userController.loadEditAddress);
+userRouter.get('/deleteAddress',nocache(),auth.isLogin,userController.deleteAddress);
 
-userRouter.get("/updateProfile", auth.isLogin, userController.loadUpdateData);
+userRouter.get("/updateProfile",nocache(), auth.isLogin, userController.loadUpdateData);
 userRouter.post("/updateProfile", auth.isLogin, userController.updateData);
 
 
-userRouter.get('/orderPlaced',auth.isLogin,orderController.loadOrderPLaced)
+userRouter.get('/orderPlaced',nocache(),auth.isLogin,orderController.loadOrderPLaced)
 userRouter.post('/placeOrder',auth.isLogin,orderController.placeOrder)
-userRouter.get('/viewOrders',auth.isLogin,orderController.loadOrderList)
-userRouter.get('/cancelOrder',auth.isLogin,orderController.cancelOrder);
+userRouter.get('/viewOrders',nocache(),auth.isLogin,orderController.loadOrderList)
+userRouter.get('/cancelOrder',nocache(),auth.isLogin,orderController.cancelOrder);
 
 
 
-userRouter.get("/wallethsitory", auth.isLogin, userController.loadWalletHistory);
+userRouter.get("/wallethsitory",nocache(), auth.isLogin, userController.loadWalletHistory);
 
 
 
