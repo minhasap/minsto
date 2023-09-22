@@ -128,7 +128,7 @@ const unlistproduct = async (req, res) => {
         { _id: id },
         { $set: { status: false } }
       );
-    } else {
+    } else { 
       await productscollection.findOneAndUpdate(
         { _id: id },
         { $set: { status: true } } 

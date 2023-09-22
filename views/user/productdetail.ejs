@@ -146,6 +146,8 @@
 									<a href="/productdetail?id=<%= products._id%>" class="prod-img">
 										<img src="/productImages/<%= products.image[0] %>" class=" xzoom" style="height: 45vw;" alt="">
 									</a>
+
+							
 									<h2><a href="productdetail"><%= products.productname %></a></h2>
 									<span class="price">Price <%= products.price %>/-</span>
 								</div>
@@ -174,11 +176,24 @@
 					<div class="col-sm-4">
 						<div class="product-desc">
 
+							<% if (productOffer.length) { %>
+								<h1>₹<%= (products.price - (products.price * productOffer[0].discountPercentage / 100)).toFixed(2) %></h1>
+								<s><h6 class="l-through">₹ <%= products.price.toFixed(2) %></h6></s>
+								<span class="text-success"><%= productOffer[0].discountPercentage %>% off</span>
+							<% } else { %>
+								<h1>₹<%= products.price.toFixed(2) %></h1>
+							<% } %>
+							
 							<h3> </h3>
 							<p class="price">
 
-									<span class="price">Price <%= products.price %>/-</span>
-									
+									<!-- <span class="offprice">Price <%= products.price %>/-</span> -->
+									<span class="price">Price:<%= products.price %>/-</span>
+									<style>
+										.offprice{
+											text-decoration: line-through;
+										}
+									</style>
 								<span class="rate">
 									<i class="icon-star-full"></i>
 									<i class="icon-star-full"></i>

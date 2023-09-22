@@ -9,9 +9,11 @@ const Category = require('../models/categoryModel')
 const Orders = require('../models/orderModel')
 const Wish = require('../models/wishmodel')
 const Banners = require('../models/bannerModel');
+const productOfferSchema = require('../models/productoffer_Model');
 
-const { otpGen } = require('../controller/OTPcontroller');
-require("dotenv").config();
+
+const { otpGen } = require('../controller/OTPcontroller'); 
+require("dotenv").config(); 
 // const { ObjectId } = require("mongodb");
 const { query } = require("express");
 const ObjectId = mongoose.Types.ObjectId;
@@ -46,17 +48,7 @@ const securePassword = async (password) => {
 const sendOTP = async (name, email, otp,) => {
    try {
 
-      // const transporter = nodemailer.createTransport({
-      //     host: "smtp.gmail.com",
-      //     port: 465,
-      //     secure: true,
-      //     // service: 'gmail',
-      //     // requireTLS: true,
-      //     auth: {
-      //         user: "projectsminhas@gmail.com",
-      //         pass: "triddewvfzlgsfal"
-      //     }
-      // });
+      
       const transporter = nodemailer.createTransport({
          host: "smtp.gmail.com",
          port: 465,
@@ -150,7 +142,7 @@ const insertUser = async (req, res) => {
       }
 
       req.session.otp = OTP;
-      sendOTP(userData.userName, userData.email, userData.phone, OTP);
+      sendOTP(userData.userName, userData.email, OTP);
       res.redirect('/otp');
    } catch (error) {
       console.log('in insertUser method', error.message);
@@ -294,12 +286,13 @@ const loadHome = async (req, res) => {
       }
 
       const data = await Product.find();
+      const productOffer = await productOfferSchema.find({ status: 'Active' });
 
       res.render('home', {
          req: req,
          products: data,
          banner,
-
+         productOffer
       });
    } catch (error) {
       console.log('loadHome Method: ', error.message);
@@ -504,12 +497,16 @@ const productDetail = async (req, res) => {
 
       console.log('---------',id);
 
+
       const data = await Product.findById(id).populate("category");
 
 
       if (data) {
+         const productOffer = await productOfferSchema.find({ status: 'Active', product_name: data._id, endDate: { $gte: new Date() }, startDate: { $lte: new Date() } }).sort({ discountPercentage: 1 });
+        console.log("prooooffffffgetttt",productOffer);
          res.render('productdetail', {
-            products: data,
+            products: data, 
+            productOffer,
             req: req,
          });
 
@@ -644,19 +641,21 @@ const addAddress = async (req, res) => {
 const loadEditAddress = async (req, res) => {
    try {
       if (req.session.userData._id) {
-         const address = await User.findOne({ _id: req.session.userData._id, 'address._id': req.query.id }).lean();
+         const address = await User.findOne({
+            _id: req.session.userData._id,
+            'address._id': req.query.id
+         }).lean();
          const data = address.address.find(a => a._id.toString() === req.query.id);
-         res.render('edit-address', { req: req, data: data });
-
+         if (!coupons) retdata.render('404');
+         res.render
+            ('edit-address', { req: req, data: data });
       } else {
-         res.redirect('/login');
-
+         res.redirect('/login');;
       }
    } catch (error) {
-      console.log('load address methode error ', error.message);
+      console.log('loadEditAddress Method: ', error.message);
    }
 };
-
 
 const editAddress = async (req, res) => {
 
@@ -1015,7 +1014,225 @@ res.render('wallethistory',{history,req});
 }
 
 
+const loadChangePass = async (req, res) => {
 
+   try {
+
+      const userId = req.session.userData._id;
+      const userData = await User.findById(userId);
+
+      res.render('changepassword', { req: req, user: userData, length });
+
+   } catch (error) {
+      console.log('loadChangePass Method :-  ', error.message);
+   }
+
+};
+
+const changePass = async (req, res) => {
+   try {
+      const userId = req.session.userData._id;
+      const userData = await User.findById(userId);
+
+      if (!userData) {
+      }
+
+      const { oldPassword, newPass, rePass } = req.body;
+
+      if (!oldPassword || !newPass || !rePass) {
+         return res.render('changepassword', {
+            req: req,
+            user: userData,
+            message: 'Please fill in all the fields', 
+            length,
+         });
+      }
+
+      if (newPass !== rePass) {
+         return res.render('changepassword', {
+            req: req,
+            user: userData,
+            message: 'Please enter matching passwords',
+            length,
+         });
+      }
+
+      const isMatchingPass = await bcrypt.compare(oldPassword, userData.password);
+      if (isMatchingPass) {
+         const secPassword = await securePassword(newPass);
+         await User.updateOne({ _id: userId }, { $set: { password: secPassword } });
+         // You may want to redirect or send a success response here
+         return res.status(200).send('Password changed successfully');
+      } else {
+         return res.render('changepassword', {
+            req: req,
+            user: userData,
+            message: 'Please enter the correct password',
+            length,
+         });
+      }
+   } catch (error) {
+      console.log('changePass Method:', error.message);
+      return res.status(500).send('Internal Server Error');
+   }
+};
+
+
+const loadForgotPass = async (req, res) => {
+
+   try {
+
+      res.render('forgotPass', { req: req, length });
+
+   } catch (error) {
+      console.log('loadForgotPass Method :-  ', error.message);
+   }
+
+};
+
+
+const forgotPass = async (req, res) => {
+
+   try {
+
+
+
+      const email = req.body.email
+      const user = await User.findOne({ email: email });
+
+
+      if (user) {
+
+         sendOTP(user.userName, user.email, OTP);
+         req.session.fotp = OTP;
+         req.session.femail = email;
+
+         res.render('forgototp', { message: "otp send successfully", length });
+
+      } else {
+         res.render('forgotPass', { req: req, message: 'Not an existing Email' });
+      }
+
+   } catch (error) {
+      console.log('forgotPass Method :-  ', error.message);
+   }
+
+};
+
+const verifyFotp = async (req, res) => {
+
+   try {
+
+      const { val1, val2, val3, val4, val5, val6 } = req.body;
+
+      const formOtp = Number(val1 + val2 + val3 + val4 + val5 + val6);
+
+      const otp = req.session.fotp;
+
+      if (formOtp == otp) {
+         res.render('updatePass', { req: req, message: 'OTP verification Successful' })
+      } else {
+         res.render('forgototp', { message: "Incrorrect OTP" })
+      }
+
+   } catch (error) {
+      console.log('verifyFOtp Method :-  ', error.message);
+   }
+
+};
+
+const updatePass = async (req, res) => {
+
+   try {
+
+      const { newPass, rePass } = req.body;
+
+
+      if (!newPass || !rePass) {
+         return res.render('updatePass', {
+            req: req,
+            message: 'Please fill in all the fields',
+            length
+         });
+      };
+
+      if (newPass !== rePass) {
+         return res.render('changepassword', {
+            req: req,
+            message: 'Please enter matching passwords',
+            length
+         });
+      };
+
+      const secPass = await securePassword(newPass);
+      const email = req.session.femail;
+
+      const user = await User.updateOne(
+         { email: email },
+         {
+            $set: {
+               password: secPass
+            }
+         }
+      );
+      if (user) {
+         req.session.destroy();
+         res.redirect('/login');;
+         console.log('Pass word updated succesfully ');
+      } else {
+         console.log('error while updating pass');
+      }
+
+   } catch (error) {
+      console.log('updatePass Method :-  ', error.message);
+   }
+
+}
+
+
+const loadAbout = async (req, res) => {
+   try {
+      if (req.session.user_id) {
+         const cart = await Cart.findOne({ user: req.session.user_id });
+         if (cart?.products) {
+            length = cart.products.length;
+            req.session.length = cart.products.length;
+         }
+      }
+
+      const data = await Product.find();
+
+      res.render('about', {
+         req: req,
+         product: data,
+         length: length
+      });
+   } catch (error) {
+      console.log('loadAbout Method: ', error.message);
+   }
+}
+
+const loadContacts = async (req, res) => {
+   try {
+      if (req.session.user_id) {
+         const cart = await Cart.findOne({ user: req.session.user_id });
+         if (cart?.products) {
+            length = cart.products.length;
+            req.session.length = cart.products.length;
+         }
+      }
+
+      const data = await Product.find();
+
+      res.render('contact', {
+         req: req,
+         product: data,
+         length: length
+      });
+   } catch (error) {
+      console.log('loadContacts Method: ', error.message);
+   }
+}
 
 
 
@@ -1049,6 +1266,13 @@ module.exports = {
    addtowishlist,
    removeWishItem,
    loadWalletHistory,
+   loadChangePass,
+   changePass,
+   forgotPass,
+   verifyFotp,
+   updatePass,
+   loadContacts,
+   loadAbout,
 
 
 

@@ -50,6 +50,8 @@ const loadAdminHome = async (req, res) => {
   const date = new Date();
   const year = date.getFullYear();
   const currentYear = new Date(year, 0, 1);
+  const value = req.query.value || "ALL";
+
   const salesByYear = await Order.aggregate([
     {
       $match: {
@@ -98,6 +100,7 @@ const loadAdminHome = async (req, res) => {
     totalUser,
     totalProducts,
     yearChart,
+    value
   });
 };
 
@@ -129,42 +132,7 @@ const loadAdminHome = async (req, res) => {
         
     }
   }
-  const getSalesReport = async (req, res) => {
-    try {
-      let start;
-      let end;
-      req.query.start ? (start = new Date(req.query.start)) : (start = "ALL");
-      req.query.end ? (end = new Date(req.query.end)) : (end = "ALL");
-      if (start != "ALL" && end != "ALL") {
-        const data = await Order.aggregate([
-          {
-            $match: {
-              $and: [
-                { Date: { $gte: start } },
-                { Date: { $lte: end } },
-                { status: { $eq: "Delivered" } },
-              ],
-            },
-          },
-        ]);
-        let SubTotal = 0;
-        data.forEach(function (value) {
-          SubTotal = SubTotal + value.totalPrice;
-        });
-        res.render("salesReport", { data, total: SubTotal }); 
-      } else {
-        const orderData = await Order.find({ status: { $eq: "Delivered" } });
-        let SubTotal = 0;
-        orderData.forEach(function (value) {
-          SubTotal = SubTotal + value.totalPrice;
-        });
-        res.render("salesReport", { data: orderData, total: SubTotal }); 
-      }
-    } catch (error) {
-      res.redirect("/serverERR", { message: error.message });
-      console.log(error.message);
-    }
-  };
+ 
   
   const updatestatus = async (req, res) => {
     try {
@@ -177,18 +145,26 @@ const loadAdminHome = async (req, res) => {
     }
 };
 
-//Logout---------------------------------------------------
-const getlogout = async (req, res) => {
-  req.session.login = false;
-  res.redirect("admin");
+// //Logout---------------------------------------------------
+// const getlogout = async (req, res) => {
+//   req.session.destroy();
+//   res.render("adminlogin");
+// }; 
+
+const getlogout = async (req, res) => { 
+  try { 
+      req.session.destroy();
+      res.render('adminlogin');
+  } catch (error) {
+      console.log('admin logout function :- ', error.message);
+  }
 };
 
 
 
 
-
  
-  
+   
   module.exports = {
     getAdminLogin,
     verifyAdminLogin,
@@ -196,7 +172,7 @@ const getlogout = async (req, res) => {
     userManagement,
     getCategory,
     getproducts,
-  getSalesReport,
+  
   updatestatus,
   getlogout
     

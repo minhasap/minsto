@@ -61,6 +61,9 @@ userRouter.get('/deleteAddress',nocache(),auth.isLogin,userController.deleteAddr
 userRouter.get("/updateProfile",nocache(), auth.isLogin, userController.loadUpdateData);
 userRouter.post("/updateProfile", auth.isLogin, userController.updateData);
 
+userRouter.get('/about', nocache(), userController.loadAbout);
+userRouter.get('/contact', nocache(), userController.loadContacts);
+
 
 userRouter.get('/orderPlaced',nocache(),auth.isLogin,orderController.loadOrderPLaced)
 userRouter.post('/placeOrder',auth.isLogin,orderController.placeOrder)
@@ -70,6 +73,15 @@ userRouter.get('/cancelOrder',nocache(),auth.isLogin,orderController.cancelOrder
 
 
 userRouter.get("/wallethsitory",nocache(), auth.isLogin, userController.loadWalletHistory);
+
+userRouter.get("/changePass", auth.isLogin, nocache(), userController.loadChangePass);
+userRouter.post('/changePass', userController.changePass);
+
+userRouter.post('/forgotPass', userController.forgotPass);
+userRouter.get("/forgotPass", nocache(), userController.forgotPass);
+
+userRouter.post('/verifyForgotOtp', userController.verifyFotp);
+userRouter.post('/updatePass', userController.updatePass); 
 
 
 

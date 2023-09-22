@@ -1,6 +1,7 @@
 const Cart = require('../models/cartmodel');
 const Products = require('../models/productModels');
 const User = require('../models/usermodel');
+const productOff= require('../models/productoffer_Model');
 
 
 
@@ -94,68 +95,71 @@ const loadCart = async (req, res) => {
    }
 };
 const addToCart = async (req, res) => {
-    try {
+   try {
        if (req.session.userData && req.session.userData._id) {
-          const user = req.session.userData;
- 
-          const productId = req.query.id; // Use req.query.id to access the ID parameter
-          const userData = await User.findOne({ _id: user._id });
-          const userId = userData._id;
-          const productData = await Products.findById(productId);
-          const userCart = await Cart.findOne({ user: userId });
- 
-          if (!productData || productData.quantity <= 0) {
-             return res.json({ success: false, outOfStock: true });
-          }
- 
-          if (userCart) {
-             const productExists = userCart.products.findIndex((product) =>
-                product.product_id.equals(productId)
-             );
-             if (productExists != -1) {
-                await Cart.findOneAndUpdate(
-                   { user: userId, "products.product_id": productId },
-                   { $inc: { "products.$.quantity": 1 } }
-                );
-             } else {
-                await Cart.findOneAndUpdate(
-                   { user: userId },
-                   {
-                      $push: {
-                         products: {
-                            product_id: productId,
-                            price: productData.price,
-                            quantity: 1,
-                            total_price: productData.price, // Calculate the initial total price
-                         },
-                      },
-                   }
-                );
-             }
-          } else {
-             const data = new Cart({
-                user: userId,
-                products: [
-                   {
-                      product_id: productId,
-                      price: productData.price,
-                      quantity: 1,
-                      total_price: productData.price, // Calculate the initial total price
-                   },
-                ],
-             });
-             await data.save();
-          }
-          res.json({ success: true }); 
+           const user = req.session.userData;
+           const productId = req.query.id;
+           const userData = await User.findOne({ _id: user._id });
+           const userId = userData._id;
+           const productData = await Products.findById(productId);
+           const userCart = await Cart.findOne({ user: userId });
+           const discount = await productOff.findOne({ product_name: productId });
+
+           // Calculate the price based on whether a discount exists
+           const price = discount ? productData.price - (productData.price * (discount.discountPercentage / 100)) : productData.price;
+
+           if (!productData || productData.quantity <= 0) {
+               return res.json({ success: false, outOfStock: true });
+           }
+
+           if (userCart) {
+               const productExists = userCart.products.findIndex((product) =>
+                   product.product_id.equals(productId)
+               );
+               if (productExists != -1) {
+                   await Cart.findOneAndUpdate(
+                       { user: userId, "products.product_id": productId },
+                       { $inc: { "products.$.quantity": 1 } }
+                   );
+               } else {
+                   await Cart.findOneAndUpdate(
+                       { user: userId },
+                       {
+                           $push: {
+                               products: {
+                                   product_id: productId,
+                                   price,
+                                   quantity: 1,
+                                   total_price: price,
+                               },
+                           },
+                       }
+                   );
+               }
+           } else {
+               const data = new Cart({
+                   user: userId,
+                   products: [
+                       {
+                           product_id: productId,
+                           price,
+                           quantity: 1,
+                           total_price: price,
+                       },
+                   ],
+               });
+               await data.save();
+           }
+           res.json({ success: true });
        } else {
-          res.json({ success: false, error: "User not logged in" });
+           res.json({ success: false, error: "User not logged in" });
        }
-    } catch (error) {
+   } catch (error) {
        console.log("addToCart Method:", error.message);
        res.json({ success: false, error: error.message });
-    }
- };
- 
+   }
+};
+
 const changeQty = async (req, res) => {
     try {
        if (req.session.userData) {
@@ -163,6 +167,11 @@ const changeQty = async (req, res) => {
           const productId = req.body.product;
           const quantity = req.body.qty;
           const product = await Products.findById(productId);
+          const discount = await productOff.findOne({product_name:productId});
+
+
+          const price=product.price-(product.price*(discount.discountPercentage/100))
+
  
           if (product.quantity >= quantity) {
              const updatedCart = await Cart.findOneAndUpdate(
@@ -173,7 +182,7 @@ const changeQty = async (req, res) => {
                 {
                    $set: {
                       'products.$.quantity': quantity,
-                      'products.$.total_price': product.price * quantity
+                      'products.$.total_price': price * quantity
                    }
                 },
                 { new: true } // Return the updated document

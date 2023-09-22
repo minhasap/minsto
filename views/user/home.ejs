@@ -71,11 +71,11 @@
 								<li><a href="shop">Shop</a></li>
 
 								<li>
-									<a href="#">men</a>
+									<!-- <a href="#">men</a> -->
 								</li>
-								<li><a href="#">Women</a></li>
-								<li><a href="#">About</a></li>
-								<li><a href="#">Contact</a></li>
+								<!-- <li><a href="#">Women</a></li> -->
+								<li><a href="/about">About</a></li>
+								<li><a href="/contact">Contact</a></li>
 								<li class="cart">
 									<% if (typeof length !=='undefined' ) {%>
 										<a href="login"><i class="icon-shopping-cart"></i> Cart </a>
@@ -212,12 +212,19 @@
 										alt="Free html5 bootstrap 4 template">
 								</a>
 								<div class="desc">
-									<h2><a href="productdetail">
-											<%= product.productname %>
-										</a></h2>
-									<span class="price">Price<%= product.price %>/-</span>
-
+									<h2><a href="productdetail"><%= product.productname %></a></h2>
+									<span class="price">Price: ₹<%= product.price %>/-</span>
+								
+									<% if (productOffer.length) { %>
+										<div class="offer">
+											<h4>Offer:</h4>
+											<p><%= productOffer[0].discountPercentage %>% off</p>
+											<p>Discounted Price: ₹<%= (product.price - (product.price * productOffer[0].discountPercentage / 100)).toFixed(2) %>/-</p>
+										</div>
+									<% } %>
 								</div>
+								
+								
 							</div>
 						</div>
 

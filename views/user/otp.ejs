@@ -71,14 +71,14 @@
     function timer(remaining) {
         let m = Math.floor(remaining / 60);
         let s = remaining % 60;
-        m = m < 10 ? "0" + m : m;
+        m = m < 30 ? "0" + m : m;
         s = s < 30 ? "0" + s : s;
         document.getElementById("countdown").innerHTML = ` ${m} : ${s}`;
         remaining -= 1;
         if (remaining >= 0 && timerOn) {
             setTimeout(function () {
                 timer(remaining);
-            }, 1000);
+            }, 3000);
             document.getElementById("resend").innerHTML = ``;
             return;
         }
