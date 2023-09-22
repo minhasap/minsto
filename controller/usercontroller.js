@@ -287,6 +287,7 @@ const loadHome = async (req, res) => {
 
       const data = await Product.find();
       const productOffer = await productOfferSchema.find({ status: 'Active' });
+      console.log(productOffer,"kityyyy");
 
       res.render('home', {
          req: req,
