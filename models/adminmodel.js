@@ -4,7 +4,7 @@ const ObjectId = mongoose.Types.ObjectId;
 
 const adminSchema = new mongoose.Schema({
 
-    name: {
+    name: { 
         type: String,
         required: true
     },

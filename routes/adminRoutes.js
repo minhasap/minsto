@@ -38,7 +38,7 @@ adminRouter.get('/',auth.isLogout, adminController.getAdminLogin);
 adminRouter.post('/',adminController.verifyAdminLogin); 
 adminRouter.get('/home',auth.isLogin,adminController.loadAdminHome);
 adminRouter.get('/logout',auth.isLogin,adminController.getlogout);
-
+ 
 adminRouter.get('/usermanagement',auth.isLogin,adminController.userManagement)
 
 adminRouter.get('/category',auth.isLogin,categoryController.loadCategory);

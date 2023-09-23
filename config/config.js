@@ -3,5 +3,5 @@ const session = {
     saveUninitialized: false,
     sessionSecret : "My session secret"
 }
-
+ 
 module.exports = session;

@@ -8,7 +8,7 @@ const productOfferSchema =new  mongoose.Schema({
         required: true,
     },
   
-    description: {
+    description: { 
         type: String,
         required: true,
     },

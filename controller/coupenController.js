@@ -120,4 +120,4 @@ loadAddCoupon,
 postAddCoupon,
 applyCoupon
 
-}
+} 

@@ -116,7 +116,7 @@ const loadAdminHome = async (req, res) => {
     }
   };
 
-
+ 
   const getCategory = async (req,res)=> {
     try {
          data1 =await categorycollection.find();

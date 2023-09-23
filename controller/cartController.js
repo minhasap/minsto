@@ -203,7 +203,7 @@ const changeQty = async (req, res) => {
           }
        } else {
           res.redirect('login');
-       }
+       } 
     } catch (error) {
        console.log('changeQty Method:', error.message);
     }

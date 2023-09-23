@@ -26,7 +26,7 @@ userRouter.use(express.urlencoded({ extended: true }));
 
 const isBlockedd = require('../middleware/blocked')
 userRouter.get('/',nocache(), userController.loadHome);
-
+ 
 userRouter.get('/login',nocache(),auth.isLogout,userController.loginLoad)
 userRouter.get('/signup',nocache(),auth.isLogout,userController.loadSignup)
 userRouter.get('/otp',nocache(), userController.loadOTP);

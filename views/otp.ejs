@@ -15,34 +15,37 @@
         <div class="position-relative">
             <div class="card p-2 text-center">
                 <h6>Please enter the one time password <br> to verify your account</h6>
-                
-                <div> <span>A code has been sent to: </span> 
-                    <% if(typeof email !=='undefined') { %> 
-                        <p style="color: blue; font-size: small;"><%=  email  %></p>
-                    <% } %>
+
+                <div> <span>A code has been sent to: </span>
+                    <% if(typeof email !=='undefined' ) { %>
+                        <p style="color: blue; font-size: small;">
+                            <%= email %>
+                        </p>
+                        <% } %>
                 </div>
 
                 <form action="/checkotp" method="POST">
                     <div id="otp" class="inputs d-flex flex-row justify-content-center mt-2">
                         <input class="m-2 text-center form-control rounded" type="text" name="val1" id="first"
-                            maxlength="1" required/>
+                            maxlength="1" required />
                         <input class="m-2 text-center form-control rounded" type="text" name="val2" id="second"
-                            maxlength="1" required/>
+                            maxlength="1" required />
                         <input class="m-2 text-center form-control rounded" type="text" name="val3" id="third"
-                            maxlength="1" required/>
+                            maxlength="1" required />
                         <input class="m-2 text-center form-control rounded" type="text" name="val4" id="fourth"
-                            maxlength="1" required/>
+                            maxlength="1" required />
                         <input class="m-2 text-center form-control rounded" type="text" name="val5" id="fifth"
-                            maxlength="1" required/>
+                            maxlength="1" required />
                         <input class="m-2 text-center form-control rounded" type="text" name="val6" id="sixth"
-                            maxlength="1" required/>
+                            maxlength="1" required />
                     </div>
-                    	<% if(typeof message !=='undefined' ){ %>
-					<p style="color:#069617">
-						<%= message %>
-					</p>
-					    <% } %>
-                    <div class="mt-4"> <input type="submit" value="Validate" class="btn btn-danger px-4 validate"></div>
+                    <% if(typeof message !=='undefined' ){ %>
+                        <p style="color:#069617">
+                            <%= message %>
+                        </p>
+                        <% } %>
+                            <div class="mt-4"> <input type="submit" value="Validate"
+                                    class="btn btn-danger px-4 validate"></div>
             </div>
             </form>
             <div class="card-2">

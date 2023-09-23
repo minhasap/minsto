@@ -7,9 +7,9 @@ const categoryschema= new mongoose.Schema({
     },
     
     status:{
-        type:Boolean,
+        type:Boolean, 
         default:false
     },
-});
+}); 
 
 module.exports = mongoose.model("Category", categoryschema)
