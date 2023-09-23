@@ -8,4 +8,4 @@ const otpGen = () => {
     });
 };
 
-module.exports = {otpGen}; 
+module.exports = {otpGen};

@@ -9,4 +9,4 @@ const isBlocked = async (req,res,next)=>{
     }
 }
 
-module.exports = isBlocked; 
+module.exports = isBlocked;

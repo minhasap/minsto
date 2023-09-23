@@ -33,7 +33,7 @@ const couponSchema = mongoose.Schema({
     type: Number,
     required: true,
   },
-  
+ 
   status: {
     type: Boolean,
     default: true,

@@ -531,7 +531,7 @@ const sales = async (req, res) => {
    } catch (error) {
        console.log(error.message);
    }
- } 
+ }
  const updatestatus = async (req, res) => {
    try {
        const status = req.body.status;

@@ -299,7 +299,7 @@ const loadHome = async (req, res) => {
       console.log('loadHome Method: ', error.message);
    }
 }
- 
+
 // logout 
 const userLogout = async (req, res) => {
 

@@ -7,8 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
 
-    <link id="page_favicon" rel="icon" <link
-        href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700" rel="stylesheet">
+    <link id="page_favicon"  rel="icon" 
+
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Rokkitt:100,300,400,700" rel="stylesheet">
 
     <link rel="stylesheet"
@@ -114,9 +115,9 @@
 
                                         <% if (typeof req.session.user_id !=='undefined' ) {%>
                                             <li><a href="profile">Profile</a></li>
-                                            <li><a href="/viewOrders">Orders</a></li>
-                                            <li><a href="/logout">logout</a></li>
-                                            <li><a href="/Wishlist">wishlist</a></li>
+											<li><a href="/viewOrders">Orders</a></li>
+											<li><a href="/logout">logout</a></li>
+											<li><a href="/Wishlist">wishlist</a></li>
 
                                             <%} else {%>
                                                 <li><a href="/login">login</a></li>
@@ -238,29 +239,22 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <% if (typeof history !=='undefined' ) { history.forEach( (history,i)=>{ %>
+                                    <% if (typeof history !== 'undefined' ) {
+                                        history.forEach( (history,i) =>{ %>
+                                    <tr>
+                                        <th scope="row"><%= i+1 %></th>
+                                        <td><%= history.amount %></td>
+                                        
+                                        <td><%= history.transaction %></td>
+                                        <td><%= history.description %></td>
+                                    </tr>
+                                    <% })} else { %>
                                         <tr>
-                                            <th scope="row">
-                                                <%= i+1 %>
-                                            </th>
                                             <td>
-                                                <%= history.amount %>
-                                            </td>
-
-                                            <td>
-                                                <%= history.transaction %>
-                                            </td>
-                                            <td>
-                                                <%= history.description %>
+                                                No Wallet Transaction Done.
                                             </td>
                                         </tr>
-                                        <% })} else { %>
-                                            <tr>
-                                                <td>
-                                                    No Wallet Transaction Done.
-                                                </td>
-                                            </tr>
-                                            <% } %>
+                                    <% } %>
                                 </tbody>
                             </table>
                         </div>

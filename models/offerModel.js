@@ -16,7 +16,7 @@ const offerSchema = mongoose.Schema({
         required: true,
     },
     discountPercentage: {
-        type: Number, 
+        type: Number,
         required: true,
     },
     startDate: {

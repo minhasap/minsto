@@ -21,7 +21,7 @@ const isLogout = (req, res, next) => {
         console.log('admin isLogout ERROR');
     }
 };
- 
+
 module.exports = {
     isLogin,
     isLogout
