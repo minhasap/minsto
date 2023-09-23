@@ -37,13 +37,14 @@ const verifyAdminLogin = (req, res) => {
   
   //home----------------------------------------------------
 const loadAdminHome = async (req, res) => {
-  const orderData = await Order.find({ status: { $ne: "cancelled" } });
+  const orderData = await Order.find({ status: { $eq: "Delivered" } });
   let SubTotal = 0;
   orderData.forEach(function (value) {
-    SubTotal = SubTotal + value.totalAmount;
+    SubTotal = SubTotal + value.totalPrice;
   });
-  const cod = await Order.find({ paymentMethod: "cod" }).count();
-  const online = await Order.find({ paymentMethod: "online" }).count();
+
+  const cod = await Order.find({ paymentMethod: "cod", status:  "Delivered" }).count();
+  const online = await Order.find({ paymentMethod: "razorpay",status:  "Delivered" }).count();
   const totalOrder = await Order.find({ status: { $ne: "cancelled" } }).count();
   const totalUser = await User.find().count();
   const totalProducts = await products.find().count();
@@ -56,18 +57,19 @@ const loadAdminHome = async (req, res) => {
     {
       $match: {
         createdAt: { $gte: currentYear },
-        status: { $ne: "cancelled" },
+        status:  "Delivered",
       },
     },
     {
       $group: {
         _id: { $dateToString: { format: "%m", date: "$createdAt" } },
-        total: { $sum: "$totalAmount" },
+        total: { $sum: "$totalPrice" },
         count: { $sum: 1 },
       },
     },
     { $sort: { _id: 1 } },
   ]);
+
 
   let sales = [];
   for (i = 1; i < 13; i++) {
@@ -99,6 +101,7 @@ const loadAdminHome = async (req, res) => {
     totalOrder,
     totalUser,
     totalProducts,
+    totalAmount:SubTotal,
     yearChart,
     value
   });
@@ -161,6 +164,46 @@ const getlogout = async (req, res) => {
 };
 
 
+const getSalesReport = async (req, res) => {
+  try {
+    let start;
+    let end;
+    req.query.start ? (start = new Date(req.query.start)) : (start = "ALL"); 
+    req.query.end ? (end = new Date(req.query.end)) : (end = "ALL");
+    if (start != "ALL" && end != "ALL") {
+      const data = await Order.aggregate([
+        {
+          $match: {
+            $and: [
+              { Date: { $gte: start } },
+              { Date: { $lte: end } },
+              { status: { $eq: "Delivered" } },
+            ],
+          },
+        },
+      ]);
+      let SubTotal = 0;
+      console.log(data);
+      data.forEach(function (value) {
+        SubTotal = SubTotal + value.totalPrice;
+      });
+
+      res.render("salesReport", { data, total: SubTotal });
+    } else {
+
+      const orderData = await Order.find({ status: { $eq: "Delivered" } });
+      let SubTotal = 0;
+      orderData.forEach(function (value) {
+        SubTotal = SubTotal + value.totalPrice; 
+      });
+      res.render("salesReport", { data: orderData, total: SubTotal });
+    }
+  } catch (error) {
+    res.redirect("/serverERR", { message: error.message });
+    console.log(error.message);
+  }
+};
+
 
 
  
@@ -174,7 +217,7 @@ const getlogout = async (req, res) => {
     getproducts,
   
   updatestatus,
-  getlogout
-    
+  getlogout,
+  getSalesReport ,
   };
   

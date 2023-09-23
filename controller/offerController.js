@@ -122,6 +122,7 @@ const get_product_offer = async (req, res) => {
             startDate: req.body.startDate,
             endDate: req.body.endDate,
         };
+        
         if (!data.product_name || !data.description || !data.discountPercentage || !data.startDate || !data.endDate) {
             return res.json({ error: 'Fill in all fields!' });
         }

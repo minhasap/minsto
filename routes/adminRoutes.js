@@ -66,6 +66,7 @@ adminRouter.get('/edit_product_offer/:id',auth.isLogin, offerController.edit_pro
 adminRouter.post('/edit_product_offer', offerController.update_product_offer);
 
 
+adminRouter.get("/salesReport",adminController.getSalesReport)
 
 
 

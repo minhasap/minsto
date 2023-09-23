@@ -69,6 +69,7 @@
                     <a href="sales" class="nav-item nav-link "><i class="fa fa-book"></i>Sales</a>
                     <a href="banner" class="nav-item nav-link"><i class="fa fa-folder"></i>Banners</a>
                     <a  href="product_offer_management" class="nav-item nav-link"><i class="fa fa-book"></i>Product Offer</a>
+                    <a href="salesReport" class="nav-item nav-link "><i class="fa fa-book"></i>Sales Report</a>
 
                   
 
@@ -182,13 +183,13 @@
                                                         </select>   
                                                 </div>
                                                 
-                                                </form>                                   
+                                                                                   
                                             <%} else { %>
                                                 <div class="col-2 mt-3">
                                                     <h6>Status :</h6>
                                                 </div>
+                                                <form action="updateStatus" method="post">
                                                 <div class="col-6">
-                                                    <form action="/updateStatus" method="post">
                                                     <input type="hidden" name="orderId" value="<%= orderData._id %>">
                                                         <input type="hidden" name="productId" value="">
                                                         <select class="form-select mt-2" name="status" id="floatingSelect"

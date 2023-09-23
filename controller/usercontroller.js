@@ -285,8 +285,8 @@ const loadHome = async (req, res) => {
       if (req.session.user_id) {
       }
 
-      const data = await Product.find();
-      const productOffer = await productOfferSchema.find({ status: 'Active' });
+      const data = await Product.find().limit(12);
+      const productOffer = await productOfferSchema.find();
       console.log(productOffer,"kityyyy");
 
       res.render('home', {

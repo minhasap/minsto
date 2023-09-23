@@ -54,7 +54,7 @@
 							<div id="colorlib-logo"><a href="index.html">MinSto.</a></div>
 						</div>
 						<div class="col-sm-5 col-md-3">
-			            	<form id="search" action="/shop" method="get" class="search-wrap">
+							<form id="search" action="/shop" method="get" class="search-wrap">
 								<div class="form-group">
 									<input id="search-key" name="searchKey" type="search" class="form-control search"
 										placeholder="Search">
@@ -62,7 +62,7 @@
 											class="icon-search"></i></button>
 								</div>
 							</form>
-			         </div>
+						</div>
 					</div>
 					<div class="row">
 						<div class="col-sm-12 text-left menu-1">
@@ -138,18 +138,22 @@
 		<aside id="colorlib-hero">
 			<div class="flexslider">
 				<ul class="slides">
-					<% banner.forEach( banner =>{ %>
+					<% banner.forEach( banner=>{ %>
 						<li style="background-image: url(/productImages/<%=banner.image%>);">
 							<div class="overlay"></div>
-							<div class="container-fluid"> 
+							<div class="container-fluid">
 								<div class="row">
 									<div class="col-sm-6 offset-sm-3 text-center slider-text">
 										<div class="slider-text-inner">
 											<div class="desc">
-												<h1 class="head-1"><%= banner.heading %></h1>
+												<h1 class="head-1">
+													<%= banner.heading %>
+												</h1>
 												<h2 class="head-2">Shoes</h2>
 												<h2 class="head-3">Collection</h2>
-												<p class="category"><span><%= banner.description %></span></p>
+												<p class="category"><span>
+														<%= banner.description %>
+													</span></p>
 												<!-- <p><a href="#" class="btn btn-primary">Shop Collection</a></p> -->
 											</div>
 										</div>
@@ -212,19 +216,24 @@
 										alt="Free html5 bootstrap 4 template">
 								</a>
 								<div class="desc">
-									<h2><a href="productdetail"><%= product.productname %></a></h2>
+									<h2><a href="productdetail">
+											<%= product.productname %>
+										</a></h2>
 									<span class="price">Price: ₹<%= product.price %>/-</span>
-								
-									<% if (productOffer.length) { %>
-										<div class="offer">
-											<h4>Offer:</h4>
-											<p><%= productOffer[0].discountPercentage %>% off</p>
-											<p>Discounted Price: ₹<%= (product.price - (product.price * productOffer[0].discountPercentage / 100)).toFixed(2) %>/-</p>
-										</div>
-									<% } %>
+
+										<% productOffer.forEach ( offer=>{ %>
+											
+											<% if (String(offer.product_name) === String(product._id)) { %>
+
+												<div class="offer">
+													<h4>Offer:</h4>
+													<p><%= offer.discountPercentage %>% off</p>
+													<p>Discounted Price: ₹<%= (product.price - (product.price * offer.discountPercentage / 100)).toFixed(2) %>/-</p>
+												</div>
+											<%} }) %>
 								</div>
-								
-								
+
+
 							</div>
 						</div>
 
@@ -233,7 +242,7 @@
 				</div>
 				<div class="row">
 					<div class="col-md-12 text-center">
-						<p><a href="#" class="btn btn-primary btn-lg">Shop All Products</a></p>
+						<p><a href="/shop" class="btn btn-primary btn-lg">Shop All Products</a></p>
 					</div>
 				</div>
 			</div>
