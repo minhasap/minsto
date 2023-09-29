@@ -76,6 +76,8 @@ adminRouter.get('/singleOrder',auth.isLogin,OrderController.viewOrder)
 adminRouter.get('/coupon',auth.isLogin,coupenController.loadCoupon)
 adminRouter.get('/addcoupon',auth.isLogin,coupenController.loadAddCoupon)
 adminRouter.post('/addcoupon',coupenController.postAddCoupon)
+adminRouter.get("/deleteCoupon",  coupenController.deleteCoupon);
+
 
 
 

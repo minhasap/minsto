@@ -111,6 +111,16 @@ const applyCoupon = async(req,res)=>{
     }
 }
 
+//detete coupen-------
+const deleteCoupon = async (req, res) => {
+    try {
+        const code = req.query.code;
+        await coupenModel.findOneAndDelete({ couponcode: code });
+        res.redirect("coupon");
+    } catch (error) {
+        console.log(error.message);
+    }
+};
 
 
  
@@ -118,6 +128,7 @@ module.exports={
     loadCoupon,
 loadAddCoupon,
 postAddCoupon,
-applyCoupon
+applyCoupon,
+deleteCoupon,
 
 }
